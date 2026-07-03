@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RC Wheel Model Studio</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background: #0f1720;
+            color: #e2e8f0;
+        }
+
+        .card-dark {
+            background: #111827;
+            border-color: #1f2937;
+        }
+
+        .param-panel {
+            max-height: calc(100vh - 230px);
+            overflow-y: auto;
+            padding-right: 0.25rem;
+        }
+
+        .status-bar {
+            background: #0b1120;
+            border-top: 1px solid rgba(226, 232, 240, 0.12);
+            color: #cbd5e1;
+        }
+
+        .render-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .placeholder-img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Wheel Model Studio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Parameters</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Preview</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid py-4">
+        <div class="row gx-4">
+            <aside class="col-xl-3 col-lg-4 mb-4">
+                <div class="card card-dark shadow-sm h-100">
+                    <div class="card-header border-bottom border-secondary">
+                        <h5 class="mb-0">Geometry Parameters</h5>
+                    </div>
+                    <div class="card-body param-panel">
+                        <form id="paramForm" class="mb-3">
+                            <div class="mb-3">
+                                <label for="shapeSelect" class="form-label">Shape</label>
+                                <select id="shapeSelect" class="form-select form-select-sm">
+                                    <option value="box">Box</option>
+                                    <option value="sphere">Sphere</option>
+                                    <option value="cylinder">Cylinder</option>
+                                    <option value="torus">Torus</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="radiusInput" class="form-label">Radius / Size</label>
+                                <input id="radiusInput" type="range" class="form-range" min="10" max="100" value="40" step="1" />
+                                <div class="d-flex justify-content-between text-muted small">
+                                    <span>10</span>
+                                    <span id="radiusValue">40</span>
+                                    <span>100</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="heightInput" class="form-label">Height</label>
+                                <input id="heightInput" type="range" class="form-range" min="10" max="120" value="60" step="1" />
+                                <div class="d-flex justify-content-between text-muted small">
+                                    <span>10</span>
+                                    <span id="heightValue">60</span>
+                                    <span>120</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="segmentsInput" class="form-label">Segments</label>
+                                <input id="segmentsInput" type="range" class="form-range" min="3" max="64" value="24" step="1" />
+                                <div class="d-flex justify-content-between text-muted small">
+                                    <span>3</span>
+                                    <span id="segmentsValue">24</span>
+                                    <span>64</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="colorInput" class="form-label">Material Color</label>
+                                <input id="colorInput" type="color" class="form-control form-control-color p-1" value="#4f9dff" title="Choose your color" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="notesInput" class="form-label">Notes</label>
+                                <textarea id="notesInput" class="form-control form-control-sm" rows="3" placeholder="Optional notes for the model"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-transparent border-top border-secondary d-flex gap-2">
+                        <button id="generateButton" type="button" class="btn btn-primary w-100">Generate Geometry</button>
+                        <button id="downloadButton" type="button" class="btn btn-outline-light w-100" disabled>Download</button>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="col-xl-9 col-lg-8">
+                <div class="card card-dark shadow-sm mb-4">
+                    <div class="card-header border-bottom border-secondary">
+                        <ul class="nav nav-tabs card-header-tabs" id="mainTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="model-tab" data-bs-toggle="tab" data-bs-target="#modelTab" type="button" role="tab" aria-controls="modelTab" aria-selected="true">Model</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rendering-tab" data-bs-toggle="tab" data-bs-target="#renderingTab" type="button" role="tab" aria-controls="renderingTab" aria-selected="false">Rendering</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content p-3">
+                        <div class="tab-pane fade show active" id="modelTab" role="tabpanel" aria-labelledby="model-tab">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class=" rounded overflow-hidden border border-secondary bg-secondary">
+                                        <img src="./images/diagram_core.png" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="rounded overflow-hidden border border-secondary bg-secondary">
+                                        <img src="./images/diagram_spoke.png" />
+                                     </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card card-dark border-secondary">
+                                        <div class="card-body p-3">
+                                            <h6 class="mb-2">Model Summary</h6>
+                                            <p class="mb-0 text-muted">This tab shows preview imagery for the selected geometry configuration. Use the Rendering tab to inspect the mesh in 3D.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="renderingTab" role="tabpanel" aria-labelledby="rendering-tab">
+                            <div class="ratio ratio-16x9 rounded overflow-hidden border border-secondary position-relative bg-black">
+                                <canvas id="renderCanvas" class="render-canvas"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <p class="mb-0 text-muted">Three.js is used to render a simple preview geometry with lighting and shading.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="status-bar py-3">
+        <div class="container-fluid d-flex flex-column flex-md-row justify-content-between gap-2">
+            <div id="statusText">Ready. Adjust parameters and click Generate Geometry.</div>
+            <div class="text-muted small">Status output</div>
+        </div>
+        <div class="container text-center">
+            <small>RC Wheel Model Studio &copy; 2026 Randall Frank. Built with OpenSCAD, Three.js and Bootstrap.</small>
+        </div>
+    </footer>
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+            "three": "./threejs/three.module.min.js",
+            "three/addons/": "./threejs/examples/jsm"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from './threejs/three.module.min.js';
+        import { OrbitControls } from './threejs/examples/jsm/controls/OrbitControls.js';
+
+        const radiusInput = document.getElementById('radiusInput');
+        const heightInput = document.getElementById('heightInput');
+        const segmentsInput = document.getElementById('segmentsInput');
+        const shapeSelect = document.getElementById('shapeSelect');
+        const colorInput = document.getElementById('colorInput');
+        const generateButton = document.getElementById('generateButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const statusText = document.getElementById('statusText');
+        const renderCanvas = document.getElementById('renderCanvas');
+        const radiusValue = document.getElementById('radiusValue');
+        const heightValue = document.getElementById('heightValue');
+        const segmentsValue = document.getElementById('segmentsValue');
+
+        let renderer, scene, camera, modelMesh, downloadData;
+
+        function updateValueLabels() {
+            radiusValue.textContent = radiusInput.value;
+            heightValue.textContent = heightInput.value;
+            segmentsValue.textContent = segmentsInput.value;
+        }
+
+        function createGeometry() {
+            const radius = Number(radiusInput.value);
+            const height = Number(heightInput.value);
+            const segments = Number(segmentsInput.value);
+            const shape = shapeSelect.value;
+            let geometry;
+
+            switch (shape) {
+                case 'sphere':
+                    geometry = new THREE.SphereGeometry(radius * 0.75, segments, segments);
+                    break;
+                case 'cylinder':
+                    geometry = new THREE.CylinderGeometry(radius * 0.6, radius * 0.6, height, segments, 1, false);
+                    break;
+                case 'torus':
+                    geometry = new THREE.TorusGeometry(radius * 0.6, radius * 0.18, 16, segments);
+                    break;
+                default:
+                    geometry = new THREE.BoxGeometry(radius, height * 0.5, radius * 0.7);
+                    break;
+            }
+
+            return geometry;
+        }
+
+        function serializeGeometryToOBJ(geometry) {
+            const position = geometry.attributes.position;
+            const index = geometry.index;
+            let obj = '';
+
+            for (let i = 0; i < position.count; i++) {
+                const x = position.getX(i).toFixed(6);
+                const y = position.getY(i).toFixed(6);
+                const z = position.getZ(i).toFixed(6);
+                obj += `v ${x} ${y} ${z}\n`;
+            }
+
+            if (index) {
+                for (let i = 0; i < index.count; i += 3) {
+                    const a = index.getX(i) + 1;
+                    const b = index.getX(i + 1) + 1;
+                    const c = index.getX(i + 2) + 1;
+                    obj += `f ${a} ${b} ${c}\n`;
+                }
+            } else {
+                for (let i = 0; i < position.count; i += 3) {
+                    obj += `f ${i + 1} ${i + 2} ${i + 3}\n`;
+                }
+            }
+
+            return obj;
+        }
+
+        function setStatus(message, level = 'normal') {
+            statusText.textContent = message;
+            statusText.className = level === 'error' ? 'text-danger' : level === 'success' ? 'text-success' : '';
+        }
+
+        function updatePreview() {
+            const color = colorInput.value;
+            const geometry = createGeometry();
+            const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), metalness: 0.25, roughness: 0.5 });
+
+            if (modelMesh) {
+                scene.remove(modelMesh);
+                modelMesh.geometry.dispose();
+                modelMesh.material.dispose();
+            }
+
+            modelMesh = new THREE.Mesh(geometry, material);
+            modelMesh.rotation.x = -0.2;
+            modelMesh.rotation.y = 0.8;
+            scene.add(modelMesh);
+            frameScene();
+            downloadData = serializeGeometryToOBJ(geometry);
+            downloadButton.disabled = false;
+            setStatus('Geometry generated and preview updated.', 'success');
+        }
+
+        function downloadGeometry() {
+            if (!downloadData) {
+                setStatus('No geometry ready to download. Click Generate Geometry first.', 'error');
+                return;
+            }
+
+            const blob = new Blob([downloadData], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'geometry.obj';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setStatus('Geometry download started.', 'success');
+        }
+
+        let controls;
+
+        function initScene() {
+            renderer = new THREE.WebGLRenderer({ canvas: renderCanvas, antialias: true, alpha: false });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(renderCanvas.clientWidth, renderCanvas.clientHeight, false);
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x07111f);
+
+            camera = new THREE.PerspectiveCamera(45, renderCanvas.clientWidth / renderCanvas.clientHeight, 0.1, 1000);
+            camera.position.set(0, 30, 110);
+
+            controls = new OrbitControls(camera, renderCanvas);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.08;
+            controls.minDistance = 30;
+            controls.maxDistance = 250;
+            controls.maxPolarAngle = Math.PI * 0.95;
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(60, 80, 40);
+            scene.add(directionalLight);
+
+            const fillLight = new THREE.DirectionalLight(0x66aaff, 0.35);
+            fillLight.position.set(-40, 20, -80);
+            scene.add(fillLight);
+
+            const grid = new THREE.GridHelper(200, 24, 0x808080, 0x404040);
+            grid.material.opacity = 0.5;
+            grid.material.transparent = true;
+            scene.add(grid);
+
+            resizeRenderer();
+
+            updatePreview();
+            animate();
+        }
+
+        function resizeRenderer() {
+            if (!renderer || !camera) return;
+            const width = renderCanvas.clientWidth;
+            const height = renderCanvas.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height, false);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (modelMesh) {
+                // modelMesh.rotation.y += 0.003;
+            }
+            if (controls) {
+                controls.update();
+            }
+            renderer.render(scene, camera);
+        }
+
+        function frameScene() {
+            const box = new THREE.Box3().setFromObject(scene);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+
+            // Get the largest dimension
+            const maxDim = Math.max(size.x, size.y, size.z);
+
+            // Fit camera to object
+            const fov = camera.fov * (Math.PI / 180);
+            let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+
+            // Add some padding
+            cameraZ *= 1.2;
+
+            // Position camera
+            camera.position.set(center.x, center.y, center.z + cameraZ);
+
+            // Update controls target
+            controls.target.copy(center);
+            controls.update();
+        }
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateValueLabels();
+            initScene();
+
+            radiusInput.addEventListener('input', () => {
+                updateValueLabels();
+                setStatus('Parameter slider changed. Click Generate Geometry to refresh preview.');
+            });
+
+            heightInput.addEventListener('input', () => {
+                updateValueLabels();
+                setStatus('Parameter slider changed. Click Generate Geometry to refresh preview.');
+            });
+
+            segmentsInput.addEventListener('input', () => {
+                updateValueLabels();
+                setStatus('Parameter slider changed. Click Generate Geometry to refresh preview.');
+            });
+
+            shapeSelect.addEventListener('change', () => {
+                setStatus('Shape changed. Click Generate Geometry to refresh preview.');
+            });
+
+            colorInput.addEventListener('input', () => {
+                setStatus('Color changed. Click Generate Geometry to refresh preview.');
+            });
+
+            generateButton.addEventListener('click', updatePreview);
+            downloadButton.addEventListener('click', downloadGeometry);
+            window.addEventListener('resize', resizeRenderer);
+        });
+    </script>
+</body>
+</html>
