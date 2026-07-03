@@ -3,10 +3,10 @@ RC Wheel Model Studio
 |MIT| |openscad| |threejs| |bootstrap| |python| |Itch|
 
 
-.. |bootstrap| image: https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff
+.. |bootstrap| image:: https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff
    :target: https://getbootstrap.com/
 
-.. |threejs| image: https://img.shields.io/badge/Three.js-000?logo=threedotjs&logoColor=fff
+.. |threejs| image:: https://img.shields.io/badge/Three.js-044?logo=threedotjs&logoColor=fff
    :target: https://threejs.org/
 
 .. |python| image:: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff
