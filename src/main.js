@@ -1,5 +1,6 @@
 import * as THREE from './threejs/three.module.min.js';
-import { OrbitControls } from './threejs/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { STLExporter } from 'three/addons/exporters/STLExporter.js';
 
 const radiusInput = document.getElementById('radiusInput');
 const heightInput = document.getElementById('heightInput');
@@ -47,32 +48,15 @@ function createGeometry() {
     return geometry;
 }
 
-function serializeGeometryToOBJ(geometry) {
-    const position = geometry.attributes.position;
-    const index = geometry.index;
-    let obj = '';
+function serializeGeometryToOBJ() {
+    
+    const exporter = new STLExporter();
+    const options = { binary: true };
+    const result = exporter.parse(scene, options);
+    const mimeType = options.binary ? 'application/octet-stream' : 'text/plain';
+    const blob = new Blob([result], { type: mimeType });
 
-    for (let i = 0; i < position.count; i++) {
-        const x = position.getX(i).toFixed(6);
-        const y = position.getY(i).toFixed(6);
-        const z = position.getZ(i).toFixed(6);
-        obj += `v ${x} ${y} ${z}\n`;
-    }
-
-    if (index) {
-        for (let i = 0; i < index.count; i += 3) {
-            const a = index.getX(i) + 1;
-            const b = index.getX(i + 1) + 1;
-            const c = index.getX(i + 2) + 1;
-            obj += `f ${a} ${b} ${c}\n`;
-        }
-    } else {
-        for (let i = 0; i < position.count; i += 3) {
-            obj += `f ${i + 1} ${i + 2} ${i + 3}\n`;
-        }
-    }
-
-    return obj;
+    return blob;
 }
 
 function setStatus(message, level = 'normal') {
@@ -96,7 +80,7 @@ function updatePreview() {
     modelMesh.rotation.y = 0.8;
     scene.add(modelMesh);
     frameScene();
-    downloadData = serializeGeometryToOBJ(geometry);
+    downloadData = serializeGeometryToOBJ();
     downloadButton.disabled = false;
     setStatus('Geometry generated and preview updated.', 'success');
 }
@@ -110,7 +94,7 @@ function downloadGeometry() {
     const blob = new Blob([downloadData], { type: 'text/plain;charset=utf-8' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'geometry.obj';
+    link.download = 'wheel.stl';
     document.body.appendChild(link);
     link.click();
     link.remove();
