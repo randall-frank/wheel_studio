@@ -73,6 +73,7 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     shutil.copyfile(os.path.join("src", "index.html"), os.path.join("build", "index.html"))
     for sub in ("css", "js", "html", "openscad", "threejs", "images"):
         shutil.copytree(os.path.join("src", sub), os.path.join("build", sub), dirs_exist_ok=True)
+    shutil.copyfile(os.path.join("src", "main.js"), os.path.join("build", "main.js"))
 
 def release() -> None:
     """
