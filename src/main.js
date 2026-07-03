@@ -1,6 +1,12 @@
 import * as THREE from './threejs/three.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+
+import OpenSCAD from "./openscad/openscad.js";
+import { addFonts } from "./openscad/openscad.fonts.js";
+import { addMCAD } from "./openscad/openscad.mcad.js";
+
 
 const radiusInput = document.getElementById('radiusInput');
 const heightInput = document.getElementById('heightInput');
@@ -23,7 +29,44 @@ function updateValueLabels() {
     segmentsValue.textContent = segmentsInput.value;
 }
 
+let scadLogOutput = [];
+
+function captureStdOut(text) {
+    scadLogOutput.push(text);
+}
+
+function captureStdErr(text) {
+    scadLogOutput.push("[Warn]:" + text);
+}
+
+async function createSCADSTL(source) {
+
+    const instance = await OpenSCAD({
+        noInitialRun: true,
+        print: captureStdOut,
+        printErr: captureStdErr
+    });
+
+    addFonts(instance);
+    addMCAD(instance);
+    instance.FS.writeFile("/input.scad", source);
+
+    let filename = "wheel.stl"; 
+    let manifold = "--backend=Manifold";  // "--enable=manifold";
+    instance.callMain(["/input.scad", manifold, "-o", filename]);
+
+    console.log(scadLogOutput);
+    const output = instance.FS.readFile("/" + filename);
+
+    // convert into Three.js object
+    const loader = new STLLoader();
+    const geometry = loader.parse(output.buffer);
+    
+    return geometry;
+}
+
 function createGeometry() {
+
     const radius = Number(radiusInput.value);
     const height = Number(heightInput.value);
     const segments = Number(segmentsInput.value);
@@ -64,9 +107,11 @@ function setStatus(message, level = 'normal') {
     statusText.className = level === 'error' ? 'text-danger' : level === 'success' ? 'text-success' : '';
 }
 
-function updatePreview() {
-    const color = colorInput.value;
-    const geometry = createGeometry();
+async function updatePreview() {
+    //const color = colorInput.value;
+    // const geometry = createGeometry();
+    const color = new THREE.Color('#d4d4d4');
+    const geometry = await createSCADSTL(scad_src);
     const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), metalness: 0.25, roughness: 0.5 });
 
     if (modelMesh) {
@@ -76,8 +121,8 @@ function updatePreview() {
     }
 
     modelMesh = new THREE.Mesh(geometry, material);
-    modelMesh.rotation.x = -0.2;
-    modelMesh.rotation.y = 0.8;
+    //modelMesh.rotation.x = -0.2;
+    //modelMesh.rotation.y = 0.8;
     scene.add(modelMesh);
     frameScene();
     downloadData = serializeGeometryToOBJ();
@@ -115,7 +160,7 @@ function initScene() {
     camera.position.set(0, 30, 110);
 
     controls = new OrbitControls(camera, renderCanvas);
-    controls.enableDamping = true;
+    controls.enableDamping = false;
     controls.dampingFactor = 0.08;
     controls.minDistance = 30;
     controls.maxDistance = 250;
@@ -134,6 +179,7 @@ function initScene() {
     const grid = new THREE.GridHelper(200, 24, 0x808080, 0x404040);
     grid.material.opacity = 0.5;
     grid.material.transparent = true;
+    grid.rotation.x = Math.PI / 2;   // in the xy plane
     scene.add(grid);
 
     updatePreview();

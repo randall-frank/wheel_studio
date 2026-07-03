@@ -74,6 +74,13 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     for sub in ("css", "js", "html", "openscad", "threejs", "images"):
         shutil.copytree(os.path.join("src", sub), os.path.join("build", sub), dirs_exist_ok=True)
     shutil.copyfile(os.path.join("src", "main.js"), os.path.join("build", "main.js"))
+    with open(os.path.join("src", "wheel.scad"), "r") as f:
+        wheel_scad = f.read()
+    tmp = f"var scad_src = `{wheel_scad}`;"
+    with open(os.path.join("build", "wheel.js"), "w") as f:
+        f.write(tmp)
+    print("Build complete.")
+
 
 def release() -> None:
     """
