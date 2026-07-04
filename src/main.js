@@ -25,12 +25,20 @@ function findParameterSet(name) {
     return null;
 }
 
+function isValidNumber(str) {
+  return str.trim() !== '' && !isNaN(str);
+}
 
 function generateSCADScript(params, source) {
     let s = source;
     params.forEach((group, index) => {
         (group.children || []).forEach((child) => {
-            const value = document.getElementById(child.key).value;
+            const elem = document.getElementById(child.key);
+            let value = elem.value;
+            if (!isValidNumber(value)) {
+                value = child.value;  // If invalid, fall back to default value
+                elem.value = value;
+            }
             const uckey = child.key.toUpperCase();
             s = s.replace(uckey, value);
         });
