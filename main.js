@@ -10,6 +10,9 @@ import { addMCAD } from "./openscad/openscad.mcad.js";
 const generateButton = document.getElementById('generateButton');
 const generateWait = document.getElementById('generateWait');
 const downloadButton = document.getElementById('downloadButton');
+const loadParamsButton = document.getElementById('loadParamsButton');
+const saveParamsButton = document.getElementById('saveParamsButton');
+const paramsFileInput = document.getElementById('paramsFileInput');
 const statusText = document.getElementById('statusText');
 const renderCanvas = document.getElementById('renderCanvas');
 const presetSelect = document.getElementById('presetSelect');
@@ -153,6 +156,75 @@ function captureStdErr(text) {
     scadLogOutput.push("[Warn]:" + text);
 }
 
+// Using the OpenSCAD JSON parameter set file format
+// { "parameterSets": { "set1": { "param1": 10, "param2": 20 }}
+// Import the first parameter set in the file...
+function importParameterSet(s) {
+    const fileObj = JSON.parse(s);
+    if ("parameterSets" in fileObj) {
+        const paramSets = fileObj["parameterSets"];
+        const firstSetKey = Object.keys(paramSets)[0];  // "set1"
+        const firstSet = paramSets[firstSetKey];
+        for (const [key, value] of Object.entries(firstSet)) {
+            if (document.getElementById(key)) {
+                document.getElementById(key).value = value;
+            }
+            const outkey = key + "_output";
+            if (document.getElementById(outkey)) {
+                document.getElementById(outkey).textContent = value;
+            }
+        }
+    }
+}
+
+// Export in the OpenSCAD JSON parameter set file format
+function exportParameterSet() {
+    let exp = {};
+    // template to get the element ids from
+    const params = findParameterSet("Default");
+    params.forEach((group, index) => {
+        (group.children || []).forEach((child) => {
+            const key = child.key;
+            const elem = document.getElementById(key);
+            let value = elem.value;
+            exp[key] = value;
+        });
+    });
+    let exportObj = { "fileFormatVersion": "1", "parameterSets": {} };
+    exportObj.parameterSets["noname"] = exp;
+    return JSON.stringify(exportObj, null, 2);
+}
+
+async function loadParameterSetFromFile(event) {
+    const file = event.target.files?.[0];
+    if (!file) {
+        return;
+    }
+
+    try {
+        const contents = await file.text();
+        importParameterSet(contents);
+        setStatus(`Loaded parameters from ${file.name}.`, 'success');
+        await updatePreview();
+    } catch (error) {
+        setStatus(`Unable to load parameter file: ${error.message}`, 'error');
+    } finally {
+        event.target.value = '';
+    }
+}
+
+function saveParameterSetToFile() {
+    const json = exportParameterSet();
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'wheel_params.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setStatus('Parameter set saved to JSON file.', 'success');
+}
+
 async function createSCADSTL(source) {
     const instance = await OpenSCAD({
         noInitialRun: true,
@@ -197,6 +269,8 @@ async function updatePreview() {
     setStatus('Generating new geometry...', 'normal');
     downloadButton.disabled = true;
     generateButton.disabled = true;
+    loadParamsButton.disabled = true;
+    saveParamsButton.disabled = true;
     generateWait.style.display = "inline-flex";
 
     const params = findParameterSet("Default");
@@ -221,6 +295,8 @@ async function updatePreview() {
 
     downloadButton.disabled = false;
     generateButton.disabled = false;
+    loadParamsButton.disabled = false;
+    saveParamsButton.disabled = false;
     generateWait.style.display = "none";
     setStatus('Geometry generated and preview updated.', 'success');
 }
@@ -333,6 +409,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     generateButton.addEventListener('click', updatePreview);
     downloadButton.addEventListener('click', downloadGeometry);
+    loadParamsButton.addEventListener('click', () => paramsFileInput.click());
+    saveParamsButton.addEventListener('click', saveParameterSetToFile);
+    paramsFileInput.addEventListener('change', loadParameterSetFromFile);
     window.addEventListener('resize', resizeRenderer);
 
     const tabElements = document.querySelectorAll('button[data-bs-toggle="tab"]');

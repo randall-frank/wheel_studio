@@ -78,13 +78,20 @@
                     <div class="card-body param-panel overflow-y-scroll" style="max-height: 750px;">
                         <form id="paraForm" class="mb-3"></form>
                     </div>
-                    <div class="card-footer bg-transparent border-top border-secondary d-flex gap-2">
-                        <button id="generateButton" type="button" class="btn btn-primary w-100">
-                                <span class="spinner-border spinner-border-sm" aria-hidden="true" id="generateWait">  </span>
-                                <span role="status">Generate</span>
-                        </button>
-                        <button id="downloadButton" type="button" class="btn btn-outline-light w-100" disabled>Download</button>
+                    <div class="card-footer bg-transparent border-top border-secondary d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            <button id="loadParamsButton" type="button" class="btn btn-outline-light w-100">Load Params</button>
+                            <button id="saveParamsButton" type="button" class="btn btn-outline-light w-100">Save Params</button>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button id="generateButton" type="button" class="btn btn-primary w-100">
+                                    <span class="spinner-border spinner-border-sm" aria-hidden="true" id="generateWait">  </span>
+                                    <span role="status">Generate STL</span>
+                            </button>
+                            <button id="downloadButton" type="button" class="btn btn-outline-light w-100" disabled>Download STL</button>
+                        </div>
                     </div>
+                    <input id="paramsFileInput" type="file" accept=".json,application/json" class="d-none">
                 </div>
             </aside>
 
@@ -145,9 +152,9 @@
                 </div>
                 <div class="modal-body">
                     <p class="mb-3">RC Wheel Model Studio lets one explore and generate RC wheel STL files from configurable OpenSCAD model.</p>
-                    <p class="mb-3 text-muted">Use the parameter panel to tune the wheel and generate a 3D preview before downloading the STL.</p>
-                    <p class="mb-3 text-muted">RC Wheel Model Studio (1.0.0) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank.</p>
-                    <p class="mb-0 text-muted">Built: 2026-07-04 13:49<br>Branch: main:6433003fff2ee97583a863382b3244cab56b982c</p>
+                    <p class="mb-3 text-muted">Use the parameter panel to tune the wheel and generate a 3D preview before downloading the STL.  The Save Params and Load Params buttons can be used to save and load the current parameter settings.</p>
+                    <p class="mb-3 text-muted">RC Wheel Model Studio (1.0.1) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank.</p>
+                    <p class="mb-0 text-muted">Built: 2026-07-04 19:56<br>Branch: main:311031ec70b58ea64d1635a9fd6c39845cb49d09</p>
                 </div>
                 <div class="modal-footer border-top border-secondary">
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
@@ -162,7 +169,7 @@
             <div class="text-muted small">Status output</div>
         </div>
         <div class="container text-center">
-            <small>RC Wheel Model Studio (1.0.0) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank. Built with OpenSCAD, Three.js and Bootstrap.</small>
+            <small>RC Wheel Model Studio (1.0.1) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank. Built with OpenSCAD, Three.js and Bootstrap.</small>
         </div>
     </footer>
 
