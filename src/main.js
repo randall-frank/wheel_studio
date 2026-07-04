@@ -11,6 +11,7 @@ const generateButton = document.getElementById('generateButton');
 const downloadButton = document.getElementById('downloadButton');
 const statusText = document.getElementById('statusText');
 const renderCanvas = document.getElementById('renderCanvas');
+const presetSelect = document.getElementById('presetSelect');
 
 let renderer, scene, camera, modelMesh, downloadData;
 
@@ -35,6 +36,25 @@ function generateSCADScript(params, source) {
         });
     });
     return s;
+}
+
+function renderPresetSelector() {
+    presetSelect.innerHTML = '';
+    for(const preset of scad_params) {
+        const item = document.createElement('a');
+        item.classList.add('dropdown-item');
+        item.href = '#';
+        item.textContent = preset.name;
+        item.value = preset.name;
+        presetSelect.appendChild(item);
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const element = e.currentTarget; 
+            const presetParams = findParameterSet(element.value);
+            renderParameterForm(presetParams);
+            updatePreview();
+        });
+    }
 }
 
 function renderParameterForm(params) {
@@ -270,6 +290,7 @@ function frameScene() {
 window.addEventListener('DOMContentLoaded', () => {
     const params = findParameterSet("Default");
     renderParameterForm(params);
+    renderPresetSelector();
     initScene();
 
     generateButton.addEventListener('click', updatePreview);
