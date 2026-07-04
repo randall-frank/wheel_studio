@@ -79,6 +79,8 @@ function renderParameterForm(params) {
         groupWrap.className = 'mt-2';
 
         (group.children || []).forEach((child) => {
+            let output = null;
+
             const fieldWrap = document.createElement('div');
             fieldWrap.className = 'mb-3';
 
@@ -90,22 +92,38 @@ function renderParameterForm(params) {
             const input = document.createElement('input');
             input.id = child.key;
             input.name = child.key;
-            input.className = 'form-control form-control-sm';
-            input.type = 'number';
             input.value = child.value ?? '';
-
             if (child.range) {
                 const [min, max] = child.range;
                 input.step = '1';
                 input.min = min;
                 input.max = max;
+                input.className = 'form-range';
+                input.type = 'range';
+
+                output = document.createElement('label');
+                output.className = 'form-label small';
+                output.readOnly = true; 
+                output.id = child.key + "_output";
+                output.textContent = child.value ?? '';
+
+                input.addEventListener('input', function (e) {
+                    const slider = e.currentTarget; 
+                    const output = document.getElementById(slider.id + "_output");
+                    output.textContent = slider.value;
+                });
+                
+
             } else {
+                input.className = 'form-control form-control-sm';
+                input.type = 'number';
                 input.step = 'any';
-                input.min = '0';
+                // input.min = '0';
             }
 
             fieldWrap.appendChild(label);
             fieldWrap.appendChild(input);
+            if (output) fieldWrap.appendChild(output);
             groupWrap.appendChild(fieldWrap);
         });
 
