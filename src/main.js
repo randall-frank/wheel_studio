@@ -14,6 +14,29 @@ const renderCanvas = document.getElementById('renderCanvas');
 
 let renderer, scene, camera, modelMesh, downloadData;
 
+
+function findParameterSet(name) {
+    for (const p of scad_params) {
+        if (p.name === name) {
+            return p.params;
+        }
+    }
+    return null;
+}
+
+
+function generateSCADScript(params, source) {
+    let s = source;
+    params.forEach((group, index) => {
+        (group.children || []).forEach((child) => {
+            const value = document.getElementById(child.key).value;
+            const uckey = child.key.toUpperCase();
+            s = s.replace(uckey, value);
+        });
+    });
+    return s;
+}
+
 function renderParameterForm(params) {
     const form = document.getElementById('paraForm');
     if (!form) return;
@@ -84,7 +107,6 @@ function captureStdErr(text) {
 }
 
 async function createSCADSTL(source) {
-
     const instance = await OpenSCAD({
         noInitialRun: true,
         print: captureStdOut,
@@ -110,7 +132,6 @@ async function createSCADSTL(source) {
 }
 
 function serializeGeometryToSTL() {
-    
     const exporter = new STLExporter();
     const options = { binary: true };
     const result = exporter.parse(scene, options);
@@ -126,9 +147,18 @@ function setStatus(message, level = 'normal') {
 }
 
 async function updatePreview() {
-    const color = new THREE.Color('#d4d4d4');
-    const geometry = await createSCADSTL(scad_src);
-    const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), metalness: 0.25, roughness: 0.5 });
+    setStatus('Generating new geometry...', 'normal');
+    downloadButton.disabled = true;
+    generateButton.disabled = true;
+
+    const params = findParameterSet("Default");
+    const source = generateSCADScript(params, scad_src);
+    const geometry = await createSCADSTL(source);
+
+    const material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color('#d4d4d4'),
+        metalness: 0.25, roughness: 0.5
+    });
 
     if (modelMesh) {
         scene.remove(modelMesh);
@@ -140,7 +170,9 @@ async function updatePreview() {
     scene.add(modelMesh);
     frameScene();
     downloadData = serializeGeometryToSTL();
+
     downloadButton.disabled = false;
+    generateButton.disabled = false;
     setStatus('Geometry generated and preview updated.', 'success');
 }
 
@@ -182,15 +214,15 @@ function initScene() {
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(60, 80, 40);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight.position.set(40, 60, 40);
     scene.add(directionalLight);
 
-    const fillLight = new THREE.DirectionalLight(0x66aaff, 0.35);
-    fillLight.position.set(-40, 20, -80);
+    const fillLight = new THREE.DirectionalLight(0x66aaff, 0.7);
+    fillLight.position.set(-40, 20, 40);
     scene.add(fillLight);
 
-    const grid = new THREE.GridHelper(200, 24, 0x808080, 0x404040);
+    const grid = new THREE.GridHelper(200, 20, 0x808080, 0x404040);
     grid.material.opacity = 0.5;
     grid.material.transparent = true;
     grid.rotation.x = Math.PI / 2;   // in the xy plane
@@ -236,7 +268,8 @@ function frameScene() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    renderParameterForm(scad_params);
+    const params = findParameterSet("Default");
+    renderParameterForm(params);
     initScene();
 
     generateButton.addEventListener('click', updatePreview);

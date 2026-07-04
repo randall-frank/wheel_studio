@@ -76,16 +76,15 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     shutil.copyfile(os.path.join("src", "main.js"), os.path.join("build", "main.js"))
     with open(os.path.join("src", "wheel.scad"), "r") as f:
         wheel_scad = f.read()
-    tmp = f"var scad_src = `{wheel_scad}`;"
-    with open(os.path.join("build", "wheel.js"), "w") as f:
-        f.write(tmp)
     
     # Extract the parameters from the .scad source
     parameters = []
     group = None
     title = None
     range = None
+    out_text = ""
     for line in wheel_scad.split("\n"):
+        out_line = line.strip()
         if line.startswith("/* ["):
             start_idx = 4
             end_idx = line.find("] */", start_idx)
@@ -112,11 +111,22 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
                 child["range"] = range
             group["children"].append(child)
             title = None
-    js_params = json.dumps(parameters, indent=4)
+            # replace the value with a placeholder
+            start_idx = out_line.find("=")
+            end_idx = out_line.find(";")
+            out_line = out_line[:start_idx+1] + " " + key.upper() + out_line[end_idx:]
+        out_text += f"{out_line}\n"
+        
+    option_sets = [dict(name="Default", params=parameters)]
+    js_params = json.dumps(option_sets, indent=4)
     js_params = f"var scad_params = {js_params};"
     with open(os.path.join("build", "wheel_params.js"), "w") as f:
         f.write(js_params)
-        
+    
+    out_text = f"var scad_src = `{out_text}`;"
+    with open(os.path.join("build", "wheel.js"), "w") as f:
+        f.write(out_text)
+            
     print("Build complete.")
 
 
