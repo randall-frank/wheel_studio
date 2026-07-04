@@ -41,7 +41,7 @@ function renderParameterForm(params) {
 
             const label = document.createElement('label');
             label.className = 'form-label small';
-            label.innerHTML = "<strong>" + child.key + "</strong><br>" + child.title;
+            label.innerHTML = '<strong>' + child.key + '</strong><br>' + child.title;
             label.htmlFor = child.key;
 
             const input = document.createElement('input');
@@ -109,7 +109,7 @@ async function createSCADSTL(source) {
     return geometry;
 }
 
-function serializeGeometryToOBJ() {
+function serializeGeometryToSTL() {
     
     const exporter = new STLExporter();
     const options = { binary: true };
@@ -137,11 +137,9 @@ async function updatePreview() {
     }
 
     modelMesh = new THREE.Mesh(geometry, material);
-    //modelMesh.rotation.x = -0.2;
-    //modelMesh.rotation.y = 0.8;
     scene.add(modelMesh);
     frameScene();
-    downloadData = serializeGeometryToOBJ();
+    downloadData = serializeGeometryToSTL();
     downloadButton.disabled = false;
     setStatus('Geometry generated and preview updated.', 'success');
 }
