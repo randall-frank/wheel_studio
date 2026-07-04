@@ -79,7 +79,10 @@
                         <form id="paraForm" class="mb-3"></form>
                     </div>
                     <div class="card-footer bg-transparent border-top border-secondary d-flex gap-2">
-                        <button id="generateButton" type="button" class="btn btn-primary w-100">Generate</button>
+                        <button id="generateButton" type="button" class="btn btn-primary w-100">
+                                <span class="spinner-border spinner-border-sm" aria-hidden="true" id="generateWait">  </span>
+                                <span role="status">Generate</span>
+                        </button>
                         <button id="downloadButton" type="button" class="btn btn-outline-light w-100" disabled>Download</button>
                     </div>
                 </div>
@@ -144,7 +147,7 @@
                     <p class="mb-3">RC Wheel Model Studio lets one explore and generate RC wheel STL files from configurable OpenSCAD model.</p>
                     <p class="mb-3 text-muted">Use the parameter panel to tune the wheel and generate a 3D preview before downloading the STL.</p>
                     <p class="mb-3 text-muted">RC Wheel Model Studio (1.0.0) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank.</p>
-                    <p class="mb-0 text-muted">Built: 2026-07-04 13:16<br>Branch: main:cd44c6d84c61e04e2a190f8ae3230dea84f80b28</p>
+                    <p class="mb-0 text-muted">Built: 2026-07-04 13:49<br>Branch: main:6433003fff2ee97583a863382b3244cab56b982c</p>
                 </div>
                 <div class="modal-footer border-top border-secondary">
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
