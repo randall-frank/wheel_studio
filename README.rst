@@ -24,8 +24,9 @@ RC Wheel Model Studio
 Overview
 --------
 
-.. image:: src/images/spokes_1.jpeg
+.. image:: src/images/app.png
    :align: center
+   :width: 600px
 
 This web application allows one to generate custom wheels compatible with common RC cars.  The model can be modified to change:
 
@@ -115,12 +116,14 @@ For the wheel itself:
 
 .. image:: src/images/diagram_core.png
    :align: center
+   :width: 600px
 
 This covers most options except for the spokes.  
 Spoke parameters look like this:
 
 .. image:: src/images/diagram_spoke.png
    :align: center
+   :width: 500px
 
 License
 -------

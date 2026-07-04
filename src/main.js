@@ -141,7 +141,7 @@ async function createSCADSTL(source) {
     let manifold = "--backend=Manifold";  // "--enable=manifold";
     instance.callMain(["/input.scad", manifold, "-o", filename]);
 
-    console.log(scadLogOutput);
+    // console.log(scadLogOutput);
     const output = instance.FS.readFile("/" + filename);
 
     // convert into Three.js object
@@ -234,13 +234,22 @@ function initScene() {
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambientLight);
+
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    directionalLight.position.set(40, 60, 40);
+    directionalLight.position.set(30, 30, 60);
     scene.add(directionalLight);
 
     const fillLight = new THREE.DirectionalLight(0x66aaff, 0.7);
-    fillLight.position.set(-40, 20, 40);
+    fillLight.position.set(-30, 20, 60);
     scene.add(fillLight);
+
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight2.position.set(30, 30, -60);
+    scene.add(directionalLight2);
+
+    const fillLight2 = new THREE.DirectionalLight(0x66aaff, 0.7);
+    fillLight2.position.set(-30, 20, -60);
+    scene.add(fillLight2);
 
     const grid = new THREE.GridHelper(200, 20, 0x808080, 0x404040);
     grid.material.opacity = 0.5;

@@ -52,13 +52,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Parameters</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Preview</a>
+                        <button class="nav-link btn btn-link" type="button" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                            About
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -136,6 +132,25 @@
             </section>
         </div>
     </main>
+
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content card-dark">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title" id="aboutModalLabel">About RC Wheel Model Studio</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">RC Wheel Model Studio lets one explore and generate RC wheel STL files from configurable OpenSCAD model.</p>
+                    <p class="mb-3 text-muted">Use the parameter panel to tune the wheel and generate a 3D preview before downloading the STL.</p>
+                    <p class="mb-0 text-muted">RC Wheel Model Studio &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank.</p>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="status-bar py-3">
         <div class="container-fluid d-flex flex-column flex-md-row justify-content-between gap-2">
