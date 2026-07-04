@@ -15,7 +15,7 @@ try:
     repo = git.Repo(".")
     branch_name = repo.active_branch.name
     branch_sha = repo.active_branch.commit.hexsha
-    __version_git__ = f"Source: {branch_name}:{branch_sha}"
+    __version_git__ = f"{branch_name}:{branch_sha}"
 except:
     __version_git__ = ""
 
@@ -70,7 +70,14 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
         os.mkdir("build")
     except OSError:
         pass
-    shutil.copyfile(os.path.join("src", "index.html"), os.path.join("build", "index.html"))
+    
+    with open(os.path.join("src", "index.html"), "r") as f:
+        index_html = f.read()
+    index_html = index_html.replace("VERSION_GIT", __version_git__)
+    index_html = index_html.replace("VERSION_DATE", __version_date__)
+    index_html = index_html.replace("VERSION", __version__)
+    with open(os.path.join("build", "index.html"), "w") as f:
+        f.write(index_html)
     for sub in ("css", "js", "html", "openscad", "threejs", "images"):
         shutil.copytree(os.path.join("src", sub), os.path.join("build", sub), dirs_exist_ok=True)
     shutil.copyfile(os.path.join("src", "main.js"), os.path.join("build", "main.js"))
