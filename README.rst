@@ -75,27 +75,29 @@ the application using the command `python build.py serve`.
 
   - rebuild the entire `build` directory. This does a `clean` followed by copying
     the contents of the `src/html` and `src/media` directories into `build`.  Finally,
-    it does a `build` which regenerates the story Javascript file.
+    it does a `build` which regenerates the application.
 
 - serve [--port {portnumber}] [--nobrowser]
 
   - This option starts a web server that serves up the contents of the `build`
     directory on the selected port.  This simulates an actual web deployment. The
     default port is 9000.  By default, a web browser tab will be opened to view 
-    the story. `--nobrowser` may be used to suppress the opening of the tab.
+    the application. `--nobrowser` may be used to suppress the opening of the tab.
 
 - release
 
   - This will first execute a `build` operation, then create a zip file of the
     contents of the `build` directory.  It will generate a file named: `wheels_vX.Y.Z.zip` where X.Y.Z is the current build version from version.txt.  The resulting
-    zip file can be served to run the game.  It can be used on platforms like
+    zip file can be served to run the application.  It can be used on platforms like
     `itch.io <https://itch.io>`_.
 
 
 Running
 ~~~~~~~
 
-One can use the `build.py` file to build and run the story:
+A prebuilt version is comitted into the github pages for this repository and can be viewed at: `RC Wheel Model Studio <https://randall-frank.github.io/wheel_studio/>`_.
+
+Otherwise, one can use the `build.py` file to build and run the application:
 
 .. code:: Powershell
 
