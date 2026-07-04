@@ -153,6 +153,41 @@ function captureStdErr(text) {
     scadLogOutput.push("[Warn]:" + text);
 }
 
+// Using the OpenSCAD JSON parameter set file format
+// { "parameterSets": { "set1": { "param1": 10, "param2": 20 }}
+// Import the first parameter set in the file...
+function importParameterSet(s) {
+    const fileObj = JSON.parse(s);
+    if ("parameterSets" in fileObj) {
+        const paramSets = fileObj["parameterSets"];
+        const firstSetKey = Object.keys(paramSets)[0];  // "set1"
+        const firstSet = paramSets[firstSetKey];
+        for (const [key, value] of Object.entries(firstSet)) {
+            if (document.getElementById(key)) {
+                document.getElementById(key).value = value;
+            }
+        }
+    }
+}
+
+// Export in the OpenSCAD JSON parameter set file format
+function exportParameterSet() {
+    let exp = {};
+    // template to get the element ids from
+    const params = findParameterSet("Default");
+    params.forEach((group, index) => {
+        (group.children || []).forEach((child) => {
+            const key = child.key;
+            const elem = document.getElementById(key);
+            let value = elem.value;
+            exp[key] = value;
+        });
+    });
+    let exportObj = { "fileFormatVersion": "1", "parameterSets": {} };
+    exportObj.parameterSets["noname"] = exp;
+    return JSON.stringify(exportObj, null, 2);
+}
+
 async function createSCADSTL(source) {
     const instance = await OpenSCAD({
         noInitialRun: true,
