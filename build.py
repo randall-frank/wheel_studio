@@ -8,7 +8,7 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 import logging
 import os
 import shutil
-
+import json
 
 try:
     import git
@@ -79,6 +79,44 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     tmp = f"var scad_src = `{wheel_scad}`;"
     with open(os.path.join("build", "wheel.js"), "w") as f:
         f.write(tmp)
+    
+    # Extract the parameters from the .scad source
+    parameters = []
+    group = None
+    title = None
+    range = None
+    for line in wheel_scad.split("\n"):
+        if line.startswith("/* ["):
+            start_idx = 4
+            end_idx = line.find("] */", start_idx)
+            name = line[start_idx:end_idx]
+            if name != "Hidden":
+                group = dict(name=name, children=[])
+                parameters.append(group)
+            else:
+                group = None
+        elif group is not None and line.startswith("// "):
+            title = line[2:].strip()
+        elif group is not None and title is not None:
+            key = line.split("=")[0].strip()
+            value = line.split("=")[1].strip().replace(";", "")
+            idx = value.find("//")
+            if idx != -1:
+                tmp = value[idx+2:].replace("[",":").replace("]",":")
+                range = tmp.split(":")[1:3]
+                value = value[:idx].strip()
+            else:
+                range = None
+            child = dict(key=key, title=title, value=value)
+            if range:
+                child["range"] = range
+            group["children"].append(child)
+            title = None
+    js_params = json.dumps(parameters, indent=4)
+    js_params = f"var scad_params = {js_params};"
+    with open(os.path.join("build", "wheel_params.js"), "w") as f:
+        f.write(js_params)
+        
     print("Build complete.")
 
 

@@ -1,5 +1,5 @@
 import * as THREE from './threejs/three.module.min.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { STLExporter } from 'three/addons/exporters/STLExporter.js';
 import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 
@@ -7,26 +7,70 @@ import OpenSCAD from "./openscad/openscad.js";
 import { addFonts } from "./openscad/openscad.fonts.js";
 import { addMCAD } from "./openscad/openscad.mcad.js";
 
-
-const radiusInput = document.getElementById('radiusInput');
-const heightInput = document.getElementById('heightInput');
-const segmentsInput = document.getElementById('segmentsInput');
-const shapeSelect = document.getElementById('shapeSelect');
-const colorInput = document.getElementById('colorInput');
 const generateButton = document.getElementById('generateButton');
 const downloadButton = document.getElementById('downloadButton');
 const statusText = document.getElementById('statusText');
 const renderCanvas = document.getElementById('renderCanvas');
-const radiusValue = document.getElementById('radiusValue');
-const heightValue = document.getElementById('heightValue');
-const segmentsValue = document.getElementById('segmentsValue');
 
 let renderer, scene, camera, modelMesh, downloadData;
 
-function updateValueLabels() {
-    radiusValue.textContent = radiusInput.value;
-    heightValue.textContent = heightInput.value;
-    segmentsValue.textContent = segmentsInput.value;
+function renderParameterForm(params) {
+    const form = document.getElementById('paraForm');
+    if (!form) return;
+
+    form.innerHTML = '';
+
+    const fragment = document.createDocumentFragment();
+
+    params.forEach((group, index) => {
+        const section = document.createElement('details');
+        section.className = 'mb-3 border rounded border-secondary p-2';
+        section.open = false;  // index === 0;
+
+        const summary = document.createElement('summary');
+        summary.className = 'fw-semibold cursor-pointer';
+        summary.textContent = group.name || 'Section';
+        section.appendChild(summary);
+
+        const groupWrap = document.createElement('div');
+        groupWrap.className = 'mt-2';
+
+        (group.children || []).forEach((child) => {
+            const fieldWrap = document.createElement('div');
+            fieldWrap.className = 'mb-3';
+
+            const label = document.createElement('label');
+            label.className = 'form-label small';
+            label.innerHTML = "<strong>" + child.key + "</strong><br>" + child.title;
+            label.htmlFor = child.key;
+
+            const input = document.createElement('input');
+            input.id = child.key;
+            input.name = child.key;
+            input.className = 'form-control form-control-sm';
+            input.type = 'number';
+            input.value = child.value ?? '';
+
+            if (child.range) {
+                const [min, max] = child.range;
+                input.step = '1';
+                input.min = min;
+                input.max = max;
+            } else {
+                input.step = 'any';
+                input.min = '0';
+            }
+
+            fieldWrap.appendChild(label);
+            fieldWrap.appendChild(input);
+            groupWrap.appendChild(fieldWrap);
+        });
+
+        section.appendChild(groupWrap);
+        fragment.appendChild(section);
+    });
+
+    form.appendChild(fragment);
 }
 
 let scadLogOutput = [];
@@ -65,32 +109,6 @@ async function createSCADSTL(source) {
     return geometry;
 }
 
-function createGeometry() {
-
-    const radius = Number(radiusInput.value);
-    const height = Number(heightInput.value);
-    const segments = Number(segmentsInput.value);
-    const shape = shapeSelect.value;
-    let geometry;
-
-    switch (shape) {
-        case 'sphere':
-            geometry = new THREE.SphereGeometry(radius * 0.75, segments, segments);
-            break;
-        case 'cylinder':
-            geometry = new THREE.CylinderGeometry(radius * 0.6, radius * 0.6, height, segments, 1, false);
-            break;
-        case 'torus':
-            geometry = new THREE.TorusGeometry(radius * 0.6, radius * 0.18, 16, segments);
-            break;
-        default:
-            geometry = new THREE.BoxGeometry(radius, height * 0.5, radius * 0.7);
-            break;
-    }
-
-    return geometry;
-}
-
 function serializeGeometryToOBJ() {
     
     const exporter = new STLExporter();
@@ -108,8 +126,6 @@ function setStatus(message, level = 'normal') {
 }
 
 async function updatePreview() {
-    //const color = colorInput.value;
-    // const geometry = createGeometry();
     const color = new THREE.Color('#d4d4d4');
     const geometry = await createSCADSTL(scad_src);
     const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), metalness: 0.25, roughness: 0.5 });
@@ -159,11 +175,11 @@ function initScene() {
     camera = new THREE.PerspectiveCamera(45, renderCanvas.clientWidth / renderCanvas.clientHeight, 0.1, 1000);
     camera.position.set(0, 30, 110);
 
-    controls = new OrbitControls(camera, renderCanvas);
+    controls = new TrackballControls(camera, renderCanvas);
     controls.enableDamping = false;
     controls.dampingFactor = 0.08;
-    controls.minDistance = 30;
-    controls.maxDistance = 250;
+    controls.minDistance = 20;
+    controls.maxDistance = 300;
     controls.maxPolarAngle = Math.PI * 0.95;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
@@ -222,31 +238,8 @@ function frameScene() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    updateValueLabels();
+    renderParameterForm(scad_params);
     initScene();
-
-    radiusInput.addEventListener('input', () => {
-        updateValueLabels();
-        setStatus('Parameter slider changed. Click Generate Geometry to refresh preview.');
-    });
-
-    heightInput.addEventListener('input', () => {
-        updateValueLabels();
-        setStatus('Parameter slider changed. Click Generate Geometry to refresh preview.');
-    });
-
-    segmentsInput.addEventListener('input', () => {
-        updateValueLabels();
-        setStatus('Parameter slider changed. Click Generate Geometry to refresh preview.');
-    });
-
-    shapeSelect.addEventListener('change', () => {
-        setStatus('Shape changed. Click Generate Geometry to refresh preview.');
-    });
-
-    colorInput.addEventListener('input', () => {
-        setStatus('Color changed. Click Generate Geometry to refresh preview.');
-    });
 
     generateButton.addEventListener('click', updatePreview);
     downloadButton.addEventListener('click', downloadGeometry);

@@ -33,7 +33,7 @@ quality = 50; // [10:500]
 // Wheel pin hole diameter (mm)
 wheel_pin_hole_dia = 4.2;
 // Air hole diameter (mm)
-air_hole_dia = 2.;
+air_hole_dia = 2.0;
 // Air hole shroud offset
 air_hole_shroud_offset = 0.5;
 

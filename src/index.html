@@ -74,53 +74,8 @@
                     <div class="card-header border-bottom border-secondary">
                         <h5 class="mb-0">Wheel Parameters</h5>
                     </div>
-                    <div class="card-body param-panel">
-                        <form id="paramForm" class="mb-3">
-                            <div class="mb-3">
-                                <label for="shapeSelect" class="form-label">Shape</label>
-                                <select id="shapeSelect" class="form-select form-select-sm">
-                                    <option value="box">Box</option>
-                                    <option value="sphere">Sphere</option>
-                                    <option value="cylinder">Cylinder</option>
-                                    <option value="torus">Torus</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="radiusInput" class="form-label">Radius / Size</label>
-                                <input id="radiusInput" type="range" class="form-range" min="10" max="100" value="40" step="1" />
-                                <div class="d-flex justify-content-between text-muted small">
-                                    <span>10</span>
-                                    <span id="radiusValue">40</span>
-                                    <span>100</span>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="heightInput" class="form-label">Height</label>
-                                <input id="heightInput" type="range" class="form-range" min="10" max="120" value="60" step="1" />
-                                <div class="d-flex justify-content-between text-muted small">
-                                    <span>10</span>
-                                    <span id="heightValue">60</span>
-                                    <span>120</span>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="segmentsInput" class="form-label">Segments</label>
-                                <input id="segmentsInput" type="range" class="form-range" min="3" max="64" value="24" step="1" />
-                                <div class="d-flex justify-content-between text-muted small">
-                                    <span>3</span>
-                                    <span id="segmentsValue">24</span>
-                                    <span>64</span>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="colorInput" class="form-label">Material Color</label>
-                                <input id="colorInput" type="color" class="form-control form-control-color p-1" value="#4f9dff" title="Choose your color" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="notesInput" class="form-label">Notes</label>
-                                <textarea id="notesInput" class="form-control form-control-sm" rows="3" placeholder="Optional notes for the model"></textarea>
-                            </div>
-                        </form>
+                    <div class="card-body param-panel overflow-y-scroll" style="max-height: 750px;">
+                        <form id="paraForm" class="mb-3"></form>
                     </div>
                     <div class="card-footer bg-transparent border-top border-secondary d-flex gap-2">
                         <button id="generateButton" type="button" class="btn btn-primary w-100">Generate</button>
@@ -197,6 +152,7 @@
         }
     </script>
     <script src="./wheel.js"></script>
+    <script src="./wheel_params.js"></script>
     <script type="module" src="./main.js"></script>
 </body>
 </html>
