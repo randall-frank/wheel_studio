@@ -8,6 +8,7 @@ import { addFonts } from "./openscad/openscad.fonts.js";
 import { addMCAD } from "./openscad/openscad.mcad.js";
 
 const generateButton = document.getElementById('generateButton');
+const generateWait = document.getElementById('generateWait');
 const downloadButton = document.getElementById('downloadButton');
 const statusText = document.getElementById('statusText');
 const renderCanvas = document.getElementById('renderCanvas');
@@ -196,6 +197,7 @@ async function updatePreview() {
     setStatus('Generating new geometry...', 'normal');
     downloadButton.disabled = true;
     generateButton.disabled = true;
+    generateWait.style.display = "inline-flex";
 
     const params = findParameterSet("Default");
     const source = generateSCADScript(params, scad_src);
@@ -219,6 +221,7 @@ async function updatePreview() {
 
     downloadButton.disabled = false;
     generateButton.disabled = false;
+    generateWait.style.display = "none";
     setStatus('Geometry generated and preview updated.', 'success');
 }
 

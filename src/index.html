@@ -79,7 +79,10 @@
                         <form id="paraForm" class="mb-3"></form>
                     </div>
                     <div class="card-footer bg-transparent border-top border-secondary d-flex gap-2">
-                        <button id="generateButton" type="button" class="btn btn-primary w-100">Generate</button>
+                        <button id="generateButton" type="button" class="btn btn-primary w-100">
+                                <span class="spinner-border spinner-border-sm" aria-hidden="true" id="generateWait">  </span>
+                                <span role="status">Generate</span>
+                        </button>
                         <button id="downloadButton" type="button" class="btn btn-outline-light w-100" disabled>Download</button>
                     </div>
                 </div>
