@@ -66,6 +66,11 @@ function renderPresetSelector() {
             renderParameterForm(presetParams);
             updatePreview();
         });
+        if (preset.name === "Reset Defaults") {
+            const divider = document.createElement('hr');
+            divider.classList.add('dropdown-divider');
+            presetSelect.appendChild(divider);
+        }
     }
 }
 
@@ -181,7 +186,7 @@ function importParameterSet(s) {
 function exportParameterSet() {
     let exp = {};
     // template to get the element ids from
-    const params = findParameterSet("Default");
+    const params = findParameterSet("Reset Defaults");
     params.forEach((group, index) => {
         (group.children || []).forEach((child) => {
             const key = child.key;
@@ -273,7 +278,7 @@ async function updatePreview() {
     saveParamsButton.disabled = true;
     generateWait.style.display = "inline-flex";
 
-    const params = findParameterSet("Default");
+    const params = findParameterSet("Reset Defaults");
     const source = generateSCADScript(params, scad_src);
     const geometry = await createSCADSTL(source);
 
@@ -402,7 +407,7 @@ function frameScene() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    const params = findParameterSet("Default");
+    const params = findParameterSet("Reset Defaults");
     renderParameterForm(params);
     renderPresetSelector();
     initScene();

@@ -9,6 +9,9 @@ import logging
 import os
 import shutil
 import json
+import glob
+import copy
+
 
 try:
     import git
@@ -124,7 +127,16 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
             out_line = out_line[:start_idx+1] + " " + key.upper() + out_line[end_idx:]
         out_text += f"{out_line}\n"
         
-    option_sets = [dict(name="Default", params=parameters)]
+    option_sets = [dict(name="Reset Defaults", params=parameters)]
+    # Add in the contents from the .json files in the presets directory
+    for f in glob.glob(os.path.join("src", "presets","*.json")):
+        with open(f, "r") as json_file:
+            data = json.load(json_file)
+            for name, params in data["parameterSets"].items():
+                log.info(f"Scanning preset: {name} from {f}")
+                option_sets.append(build_preset(name, params, parameters))
+
+
     js_params = json.dumps(option_sets, indent=4)
     js_params = f"var scad_params = {js_params};"
     with open(os.path.join("build", "wheel_params.js"), "w") as f:
@@ -134,8 +146,21 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     with open(os.path.join("build", "wheel.js"), "w") as f:
         f.write(out_text)
             
-    print("Build complete.")
+    log.info("Build complete.")
 
+def build_preset(name: str, params: dict, temp: dict) -> dict:
+    """
+    Build a preset dictionary from the given name and parameters.
+    """
+    d = copy.deepcopy(temp)
+    # walk 'd' and replace any keys that match 'params'
+    for group in d:
+        for item in group["children"]:
+            key = item["key"]
+            if key in params:
+                item["value"] = params[key]
+
+    return dict(name=name, params=d)
 
 def release() -> None:
     """
@@ -178,9 +203,9 @@ def serve(port: int = 9000, nobrowser: bool = False) -> None:
         server_address = ('127.0.0.1', port)
         httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
         url = f"http://{server_address[0]}:{server_address[1]}"
-        print(f"Serving application:  {url}")
+        log.info(f"Serving application:  {url}")
         if not nobrowser:
-            print(f"Opening a browsing tab.")
+            log.info(f"Opening a browsing tab.")
             bound_open_url = partial(open_url, url)
             timer = threading.Timer(5, bound_open_url)
             timer.start()
@@ -189,7 +214,7 @@ def serve(port: int = 9000, nobrowser: bool = False) -> None:
         pass
     finally:
         os.chdir(orig_cwd)
-    print("Server stopped.")
+    log.info("Server stopped.")
 
 
 if __name__ == "__main__":
