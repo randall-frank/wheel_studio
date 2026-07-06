@@ -1,6 +1,6 @@
 RC Wheel Model Studio
 =====================
-|MIT| |openscad| |threejs| |bootstrap| |python| |Itch|
+|MIT| |openscad| |threejs| |bootstrap| |python|
 
 
 .. |bootstrap| image:: https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff
@@ -24,9 +24,12 @@ RC Wheel Model Studio
 Overview
 --------
 
-.. image:: src/images/app.png
-   :align: center
-   :width: 600px
+.. raw:: html
+
+   <p align="center">
+     <img src="media/app.png" style="width:600px; height:auto;">
+   </p>
+
 
 This web application allows one to generate custom wheels compatible with common RC cars.  The model can be modified to change:
 
@@ -95,7 +98,7 @@ the application using the command `python build.py serve`.
 Running
 ~~~~~~~
 
-A prebuilt version is comitted into the github pages for this repository and can be viewed at: `RC Wheel Model Studio <https://randall-frank.github.io/wheel_studio/>`_.
+A prebuilt version is committed into the github pages for this repository and can be viewed at: `RC Wheel Model Studio <https://randall-frank.github.io/wheel_studio/>`_.
 
 Otherwise, one can use the `build.py` file to build and run the application:
 
@@ -116,16 +119,21 @@ The nomenclature used in the model reflects my experience with turbomachinery.  
 The next images are cross-sections through the wheel with many of the various options displayed.  
 For the wheel itself:
 
-.. image:: src/images/diagram_core.png
-   :align: center
-   :width: 600px
+.. raw:: html
+
+   <p align="center">
+     <img src="src/images/diagram_core.png" style="width:600px; height:auto;">
+   </p>
 
 This covers most options except for the spokes.  
 Spoke parameters look like this:
 
-.. image:: src/images/diagram_spoke.png
-   :align: center
-   :width: 500px
+.. raw:: html
+
+   <p align="center">
+     <img src="src/images/diagram_spoke.png" style="width:500px; height:auto;">
+   </p>
+
 
 License
 -------
@@ -133,5 +141,5 @@ License
 This work is licensed under the MIT license and is copyright (C) 2026 Randall Frank.
 
 
-.. image:: src/images/mit.svg
+.. image:: media/mit.svg
    :width: 30px
