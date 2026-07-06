@@ -16,6 +16,10 @@ const paramsFileInput = document.getElementById('paramsFileInput');
 const statusText = document.getElementById('statusText');
 const renderCanvas = document.getElementById('renderCanvas');
 const presetSelect = document.getElementById('presetSelect');
+const fitViewButton = document.getElementById('fitViewButton');
+const topViewButton = document.getElementById('topViewButton');
+const bottomViewButton = document.getElementById('bottomViewButton');
+const sideViewButton = document.getElementById('sideViewButton');
 
 let renderer, scene, camera, modelMesh, downloadData;
 
@@ -66,6 +70,11 @@ function renderPresetSelector() {
             renderParameterForm(presetParams);
             updatePreview();
         });
+        if (preset.name === "Reset Defaults") {
+            const divider = document.createElement('hr');
+            divider.classList.add('dropdown-divider');
+            presetSelect.appendChild(divider);
+        }
     }
 }
 
@@ -181,7 +190,7 @@ function importParameterSet(s) {
 function exportParameterSet() {
     let exp = {};
     // template to get the element ids from
-    const params = findParameterSet("Default");
+    const params = findParameterSet("Reset Defaults");
     params.forEach((group, index) => {
         (group.children || []).forEach((child) => {
             const key = child.key;
@@ -273,7 +282,7 @@ async function updatePreview() {
     saveParamsButton.disabled = true;
     generateWait.style.display = "inline-flex";
 
-    const params = findParameterSet("Default");
+    const params = findParameterSet("Reset Defaults");
     const source = generateSCADScript(params, scad_src);
     const geometry = await createSCADSTL(source);
 
@@ -290,7 +299,8 @@ async function updatePreview() {
 
     modelMesh = new THREE.Mesh(geometry, material);
     scene.add(modelMesh);
-    frameScene();
+    frameScene('fit');
+    frameScene('top');
     downloadData = serializeGeometryToSTL();
 
     downloadButton.disabled = false;
@@ -333,7 +343,7 @@ function initScene() {
     controls = new TrackballControls(camera, renderCanvas);
     controls.enableDamping = false;
     controls.dampingFactor = 0.08;
-    controls.minDistance = 20;
+    controls.minDistance = 5;
     controls.maxDistance = 300;
     controls.maxPolarAngle = Math.PI * 0.95;
 
@@ -385,24 +395,48 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-function frameScene() {
-    const box = new THREE.Box3().setFromObject(scene);
+function frameScene(view = 'fit') {
+    const targetObject = modelMesh || scene;
+    const box = new THREE.Box3().setFromObject(targetObject);
+    if (box.isEmpty()) return;
+
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
-
-    const maxDim = Math.max(size.x, size.y, size.z);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
     const fov = camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+    const cameraDistance = (maxDim / 2 / Math.tan(fov / 2)) * 1.5;
+    const currentRadius = camera.position.distanceTo(controls.target);
+    
+    let viewPosition;
+    switch (view) {
+        case 'top':
+            viewPosition = new THREE.Vector3(center.x, center.y, center.z + currentRadius);
+            camera.position.copy(viewPosition);
+            controls.target.copy(center);
+            break;
+        case 'bottom':
+            viewPosition = new THREE.Vector3(center.x, center.y, center.z - currentRadius);
+            camera.position.copy(viewPosition);
+            controls.target.copy(center);
+            break;
+        case 'side':
+            viewPosition = new THREE.Vector3(center.x + currentRadius, center.y, center.z);
+            camera.position.copy(viewPosition);
+            controls.target.copy(center);
+            break;
+        case 'fit':
+            viewPosition = new THREE.Vector3(center.x, center.y + cameraDistance, center.z);
+            camera.getWorldDirection(viewPosition);
+            camera.position.copy(center).addScaledVector(viewPosition, -cameraDistance);
+            controls.target.copy(center);
+            break;
+    }
 
-    cameraZ *= 1.2;
-
-    camera.position.set(center.x, center.y, center.z + cameraZ);
-    controls.target.copy(center);
     controls.update();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    const params = findParameterSet("Default");
+    const params = findParameterSet("Reset Defaults");
     renderParameterForm(params);
     renderPresetSelector();
     initScene();
@@ -412,6 +446,10 @@ window.addEventListener('DOMContentLoaded', () => {
     loadParamsButton.addEventListener('click', () => paramsFileInput.click());
     saveParamsButton.addEventListener('click', saveParameterSetToFile);
     paramsFileInput.addEventListener('change', loadParameterSetFromFile);
+    fitViewButton?.addEventListener('click', () => frameScene('fit'));
+    topViewButton?.addEventListener('click', () => frameScene('top'));
+    bottomViewButton?.addEventListener('click', () => frameScene('bottom'));
+    sideViewButton?.addEventListener('click', () => frameScene('side'));
     window.addEventListener('resize', resizeRenderer);
 
     const tabElements = document.querySelectorAll('button[data-bs-toggle="tab"]');

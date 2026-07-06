@@ -133,6 +133,12 @@
                         </div>
 
                         <div class="tab-pane fade show active" id="renderingTab" role="tabpanel" aria-labelledby="rendering-tab">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button id="fitViewButton" type="button" class="btn btn-sm btn-outline-light">Fit Geometry</button>
+                                <button id="topViewButton" type="button" class="btn btn-sm btn-outline-light">Top View</button>
+                                <button id="bottomViewButton" type="button" class="btn btn-sm btn-outline-light">Bottom View</button>
+                                <button id="sideViewButton" type="button" class="btn btn-sm btn-outline-light">Side View</button>
+                            </div>
                             <div class="ratio ratio-4x3 rounded overflow-hidden border border-secondary position-relative bg-black">
                                 <canvas id="renderCanvas" class="render-canvas"></canvas>
                             </div>
@@ -153,8 +159,8 @@
                 <div class="modal-body">
                     <p class="mb-3">RC Wheel Model Studio lets one explore and generate RC wheel STL files from configurable OpenSCAD model.</p>
                     <p class="mb-3 text-muted">Use the parameter panel to tune the wheel and generate a 3D preview before downloading the STL.  The Save Params and Load Params buttons can be used to save and load the current parameter settings.</p>
-                    <p class="mb-3 text-muted">RC Wheel Model Studio (1.0.1) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank.</p>
-                    <p class="mb-0 text-muted">Built: 2026-07-04 19:56<br>Branch: main:311031ec70b58ea64d1635a9fd6c39845cb49d09</p>
+                    <p class="mb-3 text-muted">RC Wheel Model Studio (1.0.2) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank.</p>
+                    <p class="mb-0 text-muted">Built: 2026-07-06 11:41<br>Branch: main:aa15ab4b75cc4e806bd5cb5deee5847a880ac98c</p>
                 </div>
                 <div class="modal-footer border-top border-secondary">
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
@@ -169,7 +175,7 @@
             <div class="text-muted small">Status output</div>
         </div>
         <div class="container text-center">
-            <small>RC Wheel Model Studio (1.0.1) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank. Built with OpenSCAD, Three.js and Bootstrap.</small>
+            <small>RC Wheel Model Studio (1.0.2) &copy; <script>document.write(new Date().getFullYear());</script> Randall Frank. Built with OpenSCAD, Three.js and Bootstrap.</small>
         </div>
     </footer>
 
