@@ -92,6 +92,10 @@ spoke_twist_hub = SPOKE_TWIST_HUB;
 spoke_smooth_radius = SPOKE_SMOOTH_RADIUS;
 // # of subdivisions in a spoke
 spoke_steps = SPOKE_STEPS;  // [1:20]
+// # of circular holes
+spoke_hole_count = SPOKE_HOLE_COUNT; // [0:20]
+// Spoke hole diameter (mm)
+spoke_hole_dia = SPOKE_HOLE_DIA;
 
 /* [Advanced] */
 // Epsilon adjustment for printer (mm)
@@ -296,6 +300,22 @@ polygon(points=[p0,p2,p3,p1]);
 }
 }
 }
+module spoke_holes() {
+union() {
+if (spoke_hole_count > 0) {
+delta_angle = 360. / spoke_hole_count;
+dx = (shroud_dia/2 - hub_dia/2) * 0.5 + hub_dia / 2;
+for(i=[0 : spoke_hole_count-1]) {
+angle = i * delta_angle + 5.5;
+rotate(angle) {
+translate([dx-spoke_hole_dia*0.5,-spoke_hole_dia*0.5,0]) {
+cylinder(h=shroud_width,r=spoke_hole_dia,$fn=500);
+}
+}
+}
+}
+}
+}
 
 module chan_ring() {
 union() {
@@ -348,7 +368,10 @@ r=shroud_dia*0.5-shroud_thickness,
 $fn=500);
 }
 }
+difference() {
 spokes();
+spoke_holes();
+}
 }
 // air holes
 if (air_hole_dia > 0.) {

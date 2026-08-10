@@ -176,6 +176,20 @@ var scad_params = [
                             "1",
                             "20"
                         ]
+                    },
+                    {
+                        "key": "spoke_hole_count",
+                        "title": "# of circular holes",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_dia",
+                        "title": "Spoke hole diameter (mm)",
+                        "value": "5.0"
                     }
                 ]
             },
@@ -372,6 +386,20 @@ var scad_params = [
                             "1",
                             "20"
                         ]
+                    },
+                    {
+                        "key": "spoke_hole_count",
+                        "title": "# of circular holes",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_dia",
+                        "title": "Spoke hole diameter (mm)",
+                        "value": "5.0"
                     }
                 ]
             },
@@ -564,6 +592,20 @@ var scad_params = [
                             "1",
                             "20"
                         ]
+                    },
+                    {
+                        "key": "spoke_hole_count",
+                        "title": "# of circular holes",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_dia",
+                        "title": "Spoke hole diameter (mm)",
+                        "value": "5.0"
                     }
                 ]
             },
