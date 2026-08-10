@@ -1,3 +1,4 @@
 requests
 restview
 gitpython
+ghp_import

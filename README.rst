@@ -94,6 +94,14 @@ the application using the command `python build.py serve`.
     zip file can be served to run the application.  It can be used on platforms like
     `itch.io <https://itch.io>`_.
 
+- ghpages [--ghmsg 'commit message']
+
+  - ghpages will first execute a `build` operation. It will then push the contents of
+    the `build` directory to the `gh-pages` branch of the current git repository.  This 
+    will make the story available on GitHub Pages.  The `--ghmsg` option allows you to 
+    specify a commit message for the push.  The default is the current version number 
+    of the story.
+
 
 Running
 ~~~~~~~
