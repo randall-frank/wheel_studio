@@ -192,6 +192,10 @@ var scad_params = [
         ]
     },
     {
+        "name": "Rlaarlo",
+        "params": []
+    },
+    {
         "name": "Rlaarlo xts f10 2.2",
         "params": [
             {
@@ -384,7 +388,7 @@ var scad_params = [
         ]
     },
     {
-        "name": "Rlaarlo xts f10 1.9",
+        "name": "Rlaarlo xts f10 1.9 (Red Spyder + 6mm offset)",
         "params": [
             {
                 "name": "General",
@@ -421,7 +425,7 @@ var scad_params = [
                     {
                         "key": "shroud_dia",
                         "title": "Shroud diameter (mm)",
-                        "value": "48"
+                        "value": "45.6"
                     },
                     {
                         "key": "shroud_thickness",
@@ -441,7 +445,7 @@ var scad_params = [
                     {
                         "key": "chan_width",
                         "title": "Channel width (mm)",
-                        "value": "5.9"
+                        "value": "4.27"
                     },
                     {
                         "key": "chan_thickness",
@@ -456,7 +460,7 @@ var scad_params = [
                     {
                         "key": "chan_inner_height",
                         "title": "Inner channel height (mm)",
-                        "value": "2"
+                        "value": "1"
                     }
                 ]
             },
@@ -476,7 +480,7 @@ var scad_params = [
                     {
                         "key": "hub_dia",
                         "title": "Hub cylinder diameter (mm)",
-                        "value": "19"
+                        "value": "18"
                     },
                     {
                         "key": "hub_pininset_dia",

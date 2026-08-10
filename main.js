@@ -56,24 +56,32 @@ function generateSCADScript(params, source) {
 
 function renderPresetSelector() {
     presetSelect.innerHTML = '';
-    for(const preset of scad_params) {
-        const item = document.createElement('a');
-        item.classList.add('dropdown-item');
-        item.href = '#';
-        item.textContent = preset.name;
-        item.value = preset.name;
-        presetSelect.appendChild(item);
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const element = e.currentTarget; 
-            const presetParams = findParameterSet(element.value);
-            renderParameterForm(presetParams);
-            updatePreview();
-        });
-        if (preset.name === "Reset Defaults") {
-            const divider = document.createElement('hr');
-            divider.classList.add('dropdown-divider');
-            presetSelect.appendChild(divider);
+    for (const preset of scad_params) {
+        if (preset.params.length == 0) {   // zero length params list are "headers" or "dividers"
+            if (preset.name.length == 0) {  // divider line
+                const divider = document.createElement('hr');
+                divider.classList.add('dropdown-divider');
+                presetSelect.appendChild(divider);
+            } else {   // 'title' line
+                const header = document.createElement('h6');
+                header.classList.add('dropdown-header');
+                header.textContent = preset.name;
+                presetSelect.appendChild(header); 
+            }
+        } else {
+            const item = document.createElement('a');
+            item.classList.add('dropdown-item');
+            item.href = '#';
+            item.textContent = preset.name;
+            item.value = preset.name;
+            presetSelect.appendChild(item);
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const element = e.currentTarget;
+                const presetParams = findParameterSet(element.value);
+                renderParameterForm(presetParams);
+                updatePreview();
+            });
         }
     }
 }
