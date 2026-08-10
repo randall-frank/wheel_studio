@@ -30,6 +30,8 @@
             "spoke_steps": "3",
             "spoke_twist_hub": "0",
             "spoke_twist_shroud": "3",
+            "spoke_hole_count": "0",
+            "spoke_hole_dia": "5.0",
             "wheel_pin_hole_dia": "4.2"
         },
         "Rlaarlo xts f10 1.9 (Red Spyder + 6mm offset)": {
@@ -61,6 +63,8 @@
             "spoke_steps": "3",
             "spoke_twist_hub": "0",
             "spoke_twist_shroud": "3",
+            "spoke_hole_count": "0",
+            "spoke_hole_dia": "5.0",
             "wheel_pin_hole_dia": "4.2"
         }
     }

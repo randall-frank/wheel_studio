@@ -92,6 +92,10 @@ spoke_twist_hub = 0.0;
 spoke_smooth_radius = 1.0;
 // # of subdivisions in a spoke
 spoke_steps = 2;  // [1:20]
+// # of circular holes
+spoke_hole_count = 0; // [0:20]
+// Spoke hole diameter (mm)
+spoke_hole_dia = 5.0;
 
 /* [Advanced] */
 // Epsilon adjustment for printer (mm)
@@ -296,6 +300,22 @@ module spokes() {
         }
     }
 }
+module spoke_holes() {
+    union() {
+        if (spoke_hole_count > 0) {
+            delta_angle = 360. / spoke_hole_count;
+            dx = (shroud_dia/2 - hub_dia/2) * 0.5 + hub_dia / 2; 
+            for(i=[0 : spoke_hole_count-1]) {
+                angle = i * delta_angle + 5.5;
+                rotate(angle) {
+                    translate([dx-spoke_hole_dia*0.5,-spoke_hole_dia*0.5,0]) {
+                        cylinder(h=shroud_width,r=spoke_hole_dia,$fn=500);
+                    }
+                }
+            }
+        }
+    }
+}
 
 module chan_ring() {
     union() {
@@ -348,7 +368,10 @@ module wheel() {
                                  $fn=500);
                     }
                 }
-                spokes();
+                difference() {
+                    spokes();
+                    spoke_holes();
+                }
             }
             // air holes
             if (air_hole_dia > 0.) {
