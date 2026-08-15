@@ -44,6 +44,8 @@ shroud_dia = SHROUD_DIA;
 shroud_thickness = SHROUD_THICKNESS;
 // Shroud width (mm)
 shroud_width = SHROUD_WIDTH;
+// Bevel inner rim
+shroud_bevel = SHROUD_BEVEL; // [0:1]
 
 /* [Tire channels] */
 // Channel width (mm)
@@ -253,7 +255,7 @@ module spokes() {
 // Think like one is revolving a shape on
 // the x,y plane around the y axis.
 x0 = hub_dia*0.5 - eps;
-x1 = shroud_dia*0.5 - shroud_thickness + eps;
+x1 = shroud_dia*0.5 + eps;
 
 p0 = [x1, shroud_width - spoke_shroud_offset - spoke_shroud_width];
 p1 = [x1, shroud_width - spoke_shroud_offset];
@@ -267,7 +269,7 @@ delta_angle = 360. / spoke_count;
 spoke_width = delta_angle * spoke_duty;
 
 r0 = hub_dia*0.5 - eps;
-r1 = shroud_dia*0.5 - shroud_thickness + eps;
+r1 = shroud_dia*0.5 + eps;
 offsets = [
 hub_face_offset + hub_cyl_depth + spoke_hub_offset - spoke_hub_width,
 shroud_width - spoke_shroud_offset - spoke_shroud_width];
@@ -300,6 +302,7 @@ polygon(points=[p0,p2,p3,p1]);
 }
 }
 }
+
 module spoke_holes() {
 union() {
 if (spoke_hole_count > 0) {
@@ -308,12 +311,21 @@ dx = (shroud_dia/2 - hub_dia/2) * 0.5 + hub_dia / 2;
 for(i=[0 : spoke_hole_count-1]) {
 angle = i * delta_angle + 5.5;
 rotate(angle) {
-translate([dx-spoke_hole_dia*0.5,-spoke_hole_dia*0.5,0]) {
-cylinder(h=shroud_width,r=spoke_hole_dia,$fn=500);
+translate([dx,0,0]) {
+cylinder(h=shroud_width*2,r=spoke_hole_dia,
+center=true,$fn=500);
 }
 }
 }
 }
+}
+}
+
+module rim_bevel() {
+translate([0,0,-10.+shroud_bevel*10.0]) {
+cylinder(r2=shroud_dia*0.5,
+r1=shroud_dia*0.5+shroud_thickness,
+h=shroud_thickness*1.25,$fn=500);
 }
 }
 
@@ -322,10 +334,12 @@ union() {
 if (chan_outer_height > 0.0) {
 difference() {
 cylinder(h=chan_thickness,
-r=shroud_dia*0.5+chan_outer_height,$fn=500);
+r=shroud_dia*0.5+shroud_thickness+chan_outer_height,
+$fn=500);
 translate([0,0,-eps2*0.5]) {
 cylinder(h=chan_thickness+eps2,
-r=shroud_dia*0.5,$fn=500);
+r=shroud_dia*0.5+shroud_thickness,
+$fn=500);
 }
 }
 }
@@ -333,10 +347,12 @@ if (chan_inner_height > 0.0) {
 translate([0,0,chan_width+chan_thickness]) {
 difference() {
 cylinder(h=chan_thickness,
-r=shroud_dia*0.5+chan_inner_height,$fn=500);
+r=shroud_dia*0.5+chan_inner_height+shroud_thickness,
+$fn=500);
 translate([0,0,-eps2*0.5]) {
 cylinder(h=chan_thickness+eps2,
-r=shroud_dia*0.5,$fn=500);
+r=shroud_dia*0.5+shroud_thickness,
+$fn=500);
 }
 }
 }
@@ -361,11 +377,15 @@ difference() {
 union() {
 difference() {
 cylinder(h=shroud_width,
-r=shroud_dia*0.5, $fn=500);
+r=shroud_dia*0.5+shroud_thickness,
+$fn=500);
+union() {
 translate([0,0,-eps2*0.5]) {
 cylinder(h=shroud_width+eps2,
-r=shroud_dia*0.5-shroud_thickness,
+r=shroud_dia*0.5,
 $fn=500);
+}
+rim_bevel();
 }
 }
 difference() {
@@ -376,28 +396,28 @@ spoke_holes();
 // air holes
 if (air_hole_dia > 0.) {
 union() {
-translate([-shroud_dia*0.5-shroud_thickness*0.5,
+translate([-shroud_dia*0.5-shroud_thickness*1.5,
 0, shroud_width*air_hole_shroud_offset]) {
 rotate([0, 90, 0]) {
 cylinder(h=shroud_thickness*2,
 r=air_hole_dia*0.5);
 }
 }
-translate([shroud_dia*0.5-shroud_thickness*1.5,
+translate([shroud_dia*0.5-shroud_thickness*0.5,
 0, shroud_width*air_hole_shroud_offset]) {
 rotate([0, 90, 0]) {
 cylinder(h=shroud_thickness*2,
 r=air_hole_dia*0.5);
 }
 }
-translate([0, shroud_dia*0.5+shroud_thickness*0.5,
+translate([0, shroud_dia*0.5+shroud_thickness*1.5,
 shroud_width*air_hole_shroud_offset]) {
 rotate([90, 0, 0]) {
 cylinder(h=shroud_thickness*2,
 r=air_hole_dia*0.5);
 }
 }
-translate([0, -shroud_dia*0.5+shroud_thickness*1.5,
+translate([0, -shroud_dia*0.5+shroud_thickness*0.5,
 shroud_width*air_hole_shroud_offset]) {
 rotate([90, 0, 0]) {
 cylinder(h=shroud_thickness*2,

@@ -48,6 +48,15 @@ var scad_params = [
                         "key": "shroud_width",
                         "title": "Shroud width (mm)",
                         "value": "26.0"
+                    },
+                    {
+                        "key": "shroud_bevel",
+                        "title": "Bevel inner rim",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "1"
+                        ]
                     }
                 ]
             },
@@ -258,6 +267,15 @@ var scad_params = [
                         "key": "shroud_width",
                         "title": "Shroud width (mm)",
                         "value": "27"
+                    },
+                    {
+                        "key": "shroud_bevel",
+                        "title": "Bevel inner rim",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "1"
+                        ]
                     }
                 ]
             },
@@ -464,6 +482,15 @@ var scad_params = [
                         "key": "shroud_width",
                         "title": "Shroud width (mm)",
                         "value": "26"
+                    },
+                    {
+                        "key": "shroud_bevel",
+                        "title": "Bevel inner rim",
+                        "value": "1",
+                        "range": [
+                            "0",
+                            "1"
+                        ]
                     }
                 ]
             },
@@ -528,7 +555,7 @@ var scad_params = [
                     {
                         "key": "hub_face_offset",
                         "title": "Hub offset from inner face (mm)",
-                        "value": "10"
+                        "value": "5.5"
                     }
                 ]
             },
@@ -552,12 +579,12 @@ var scad_params = [
                     {
                         "key": "spoke_shroud_offset",
                         "title": "Shroud root offset (mm)",
-                        "value": "3"
+                        "value": "5"
                     },
                     {
                         "key": "spoke_shroud_width",
                         "title": "Shroud root width (mm)",
-                        "value": "7"
+                        "value": "9"
                     },
                     {
                         "key": "spoke_twist_shroud",
