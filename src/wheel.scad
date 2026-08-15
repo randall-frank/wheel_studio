@@ -44,6 +44,8 @@ shroud_dia = 48.0;
 shroud_thickness = 1.5;
 // Shroud width (mm)
 shroud_width = 26.0;
+// Bevel inner rim
+shroud_bevel = 0; // [0:1]
 
 /* [Tire channels] */
 // Channel width (mm)
@@ -300,6 +302,7 @@ module spokes() {
         }
     }
 }
+
 module spoke_holes() {
     union() {
         if (spoke_hole_count > 0) {
@@ -308,13 +311,22 @@ module spoke_holes() {
             for(i=[0 : spoke_hole_count-1]) {
                 angle = i * delta_angle + 5.5;
                 rotate(angle) {
-                    translate([dx-spoke_hole_dia*0.5,-spoke_hole_dia*0.5,0]) {
-                        cylinder(h=shroud_width,r=spoke_hole_dia,$fn=500);
+                    translate([dx,0,0]) {
+                        cylinder(h=shroud_width*2,r=spoke_hole_dia,
+                                 center=true,$fn=500);
                     }
                 }
             }
         }
     }
+}
+
+module rim_bevel() {
+    translate([0,0,-10.+shroud_bevel*10.0]) {
+        cylinder(r2=shroud_dia*0.5,
+                 r1=shroud_dia*0.5+shroud_thickness,
+                 h=shroud_thickness*1.25,$fn=500);
+        }
 }
 
 module chan_ring() {
@@ -367,10 +379,13 @@ module wheel() {
                     cylinder(h=shroud_width, 
                              r=shroud_dia*0.5+shroud_thickness, 
                              $fn=500);
-                    translate([0,0,-eps2*0.5]) {
-                        cylinder(h=shroud_width+eps2, 
-                                 r=shroud_dia*0.5, 
-                                 $fn=500);
+                    union() {
+                        translate([0,0,-eps2*0.5]) {
+                            cylinder(h=shroud_width+eps2, 
+                                    r=shroud_dia*0.5, 
+                                    $fn=500);
+                        }
+                        rim_bevel();
                     }
                 }
                 difference() {

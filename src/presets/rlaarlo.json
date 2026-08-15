@@ -32,7 +32,8 @@
             "spoke_twist_shroud": "3",
             "spoke_hole_count": "0",
             "spoke_hole_dia": "5.0",
-            "wheel_pin_hole_dia": "4.2"
+            "wheel_pin_hole_dia": "4.2",
+            "shroud_bevel": "0"
         },
         "Rlaarlo xts f10 1.9 (Red Spyder + 6mm offset)": {
             "quality": "50",
@@ -52,7 +53,7 @@
             "hub_pininset_dia": "14",
             "hub_pin_depth": "3",
             "hub_cyl_depth": "13",
-            "hub_face_offset": "7.5",
+            "hub_face_offset": "5.5",
             "spoke_count": "6",
             "spoke_duty": "1.1000000000000001",
             "spoke_shroud_offset": "5",
@@ -65,7 +66,8 @@
             "spoke_steps": "3",
             "spoke_hole_count": "0",
             "spoke_hole_dia": "5.0",
-            "eps": "0.10000000000000001"
+            "eps": "0.10000000000000001",
+            "shroud_bevel": "1"
         }
     }
 }
