@@ -1,0 +1,18 @@
+/* Ensure the submenu positions correctly relative to its parent item */
+.dropdown-menu .dropend {
+  position: relative;
+}
+
+/* Position the nested submenu directly to the right and flush with the top */
+.dropdown-menu .dropend .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px; /* Corrects alignment border issues */
+}
+
+/* Opens the menu on hover for desktop screens */
+@media (min-width: 992px) {
+  .dropdown-menu .dropend:hover > .dropdown-menu {
+    display: block;
+  }
+}

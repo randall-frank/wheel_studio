@@ -56,17 +56,33 @@ function generateSCADScript(params, source) {
 
 function renderPresetSelector() {
     presetSelect.innerHTML = '';
+    var submenu = null;
+    let submenuid = "submenu-";
     for (const preset of scad_params) {
         if (preset.params.length == 0) {   // zero length params list are "headers" or "dividers"
             if (preset.name.length == 0) {  // divider line
                 const divider = document.createElement('hr');
                 divider.classList.add('dropdown-divider');
                 presetSelect.appendChild(divider);
-            } else {   // 'title' line
-                const header = document.createElement('h6');
-                header.classList.add('dropdown-header');
-                header.textContent = preset.name;
-                presetSelect.appendChild(header); 
+            } else {
+                // create a submenu
+                const submenudiv = document.createElement('div');
+                submenudiv.classList.add('dropend');
+                submenudiv.classList.add('submenu');
+                presetSelect.appendChild(submenudiv); 
+                const submenubtn = document.createElement('a');
+                submenubtn.classList.add('dropdown-item');
+                submenubtn.classList.add('dropdown-toggle');
+                submenubtn.href = '#';
+                submenubtn.textContent = preset.name;
+                submenubtn.id = submenuid;
+                submenudiv.appendChild(submenubtn); 
+                submenu = document.createElement('div');
+                submenu.classList.add('dropdown-menu');
+                submenu.setAttribute('aria-labelledby', submenuid);
+                submenuid += 'I';
+                submenudiv.appendChild(submenu); 
+
             }
         } else {
             const item = document.createElement('a');
@@ -74,7 +90,11 @@ function renderPresetSelector() {
             item.href = '#';
             item.textContent = preset.name;
             item.value = preset.name;
-            presetSelect.appendChild(item);
+            if (submenu) {
+                submenu.appendChild(item);
+            } else {
+                presetSelect.appendChild(item);
+            }
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const element = e.currentTarget;
