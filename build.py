@@ -127,11 +127,11 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
             out_line = out_line[:start_idx+1] + " " + key.upper() + out_line[end_idx:]
         out_text += f"{out_line}\n"
         
-    option_sets = [dict(name="Reset Defaults", params=parameters)]
+    option_sets = [dict(name="Reset Defaults", params=parameters),dict(name="", params=[])]
     # option_sets.append(dict(name="", params=[]))
     # Add in the contents from the .json files in the presets directory
     for f in glob.glob(os.path.join("src", "presets","*.json")):
-        header = dict(name=os.path.splitext(os.path.basename(f))[0].capitalize(), params=[])
+        header = dict(name=os.path.splitext(os.path.basename(f))[0].title(), params=[])
         option_sets.append(header)
         with open(f, "r") as json_file:
             data = json.load(json_file)
