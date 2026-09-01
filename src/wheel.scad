@@ -452,5 +452,12 @@ module wheel() {
     }
 }
 
+module measuring_stub() {
+    union() {
+        translate([0,0,50-2]) cube([20,20,4], center=true);
+        translate([0,0,25]) cylinder(d=10, h=50, center=true, $fn=200);
+    }
+}
 
 wheel();
+//measuring_stub();
