@@ -88,7 +88,7 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
         wheel_scad = f.read()
     
     # Extract the parameters from the .scad source
-    parameters = []
+    group_list = []
     group = None
     title = None
     range = None
@@ -101,7 +101,7 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
             name = line[start_idx:end_idx]
             if name != "Hidden":
                 group = dict(name=name, children=[])
-                parameters.append(group)
+                group_list.append(group)
             else:
                 group = None
         elif group is not None and line.startswith("// "):
@@ -127,7 +127,7 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
             out_line = out_line[:start_idx+1] + " " + key.upper() + out_line[end_idx:]
         out_text += f"{out_line}\n"
         
-    option_sets = [dict(name="Reset Defaults", params=parameters),dict(name="", params=[])]
+    option_sets = [dict(name="Reset Defaults", params=group_list),dict(name="", params=[])]
     # option_sets.append(dict(name="", params=[]))
     # Add in the contents from the .json files in the presets directory
     for f in glob.glob(os.path.join("src", "presets","*.json")):
@@ -135,9 +135,12 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
         option_sets.append(header)
         with open(f, "r") as json_file:
             data = json.load(json_file)
+            if 'section_name' in data:
+                header['name'] = data['section_name']
+                log.info(f"New section name: {header['name']}")
             for name, params in data["parameterSets"].items():
                 log.info(f"Scanning preset: {name} from {f}")
-                option_sets.append(build_preset(name, params, parameters))
+                option_sets.append(build_preset(name, params, group_list))
 
 
     js_params = json.dumps(option_sets, indent=4)
@@ -151,11 +154,11 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
             
     log.info("Build complete.")
 
-def build_preset(name: str, params: dict, temp: dict) -> dict:
+def build_preset(name: str, params: dict, groups: list) -> dict:
     """
     Build a preset dictionary from the given name and parameters.
     """
-    d = copy.deepcopy(temp)
+    d = copy.deepcopy(groups)
     # walk 'd' and replace any keys that match 'params'
     for group in d:
         for item in group["children"]:
