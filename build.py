@@ -121,16 +121,17 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     option_sets = [dict(name="Reset Defaults", params=group_list),dict(name="", params=[])]
     # option_sets.append(dict(name="", params=[]))
     # Add in the contents from the .json files in the presets directory
-    for f in glob.glob(os.path.join("src", "presets","*.json")):
+    for f in sorted(glob.glob(os.path.join("src", "presets","*.json"))):
         header = dict(name=os.path.splitext(os.path.basename(f))[0].title(), params=[])
         option_sets.append(header)
         with open(f, "r") as json_file:
+            log.info(f"Reading preset file: {f}")
             data = json.load(json_file)
             if 'section_name' in data:
                 header['name'] = data['section_name']
                 log.info(f"New section name: {header['name']}")
             for name, params in data["parameterSets"].items():
-                log.info(f"Scanning preset: {name} from {f}")
+                log.info(f"Scanning preset: {name}")
                 option_sets.append(build_preset(name, params, group_list))
 
 
