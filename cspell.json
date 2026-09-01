@@ -1,0 +1,32 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": [
+        "arcname",
+        "avgpoint",
+        "dropend",
+        "fullbuild",
+        "ghmsg",
+        "ghpages",
+        "hexsha",
+        "labelledby",
+        "lerp",
+        "mcad",
+        "mesg",
+        "metalness",
+        "openscad",
+        "outkey",
+        "pininset",
+        "portnumber",
+        "Rlaarlo",
+        "threejs",
+        "timespec",
+        "turbomachinery",
+        "venv",
+        "virtualenv"
+    ],
+    "ignoreWords": [],
+    "import": []
+}

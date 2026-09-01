@@ -202,7 +202,7 @@ module blade(r0, r1, angle, delta_angle, offsets, widths,
     
     union() {
         // Generate the blade with a 1 step over/under shoot
-        // This is then clipped against the hub and shround 
+        // This is then clipped against the hub and shroud 
         // cylinders.
         for(step=[0: 1: steps]) {
             t0 = 0 + (step*t_delta);
