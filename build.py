@@ -2,6 +2,7 @@ import argparse
 import datetime
 from functools import partial
 import threading
+from typing import Optional
 import webbrowser
 import zipfile
 from http.server import SimpleHTTPRequestHandler, HTTPServer
@@ -30,27 +31,13 @@ with open("version.txt", "r") as f:
 # Get the current time/date
 __version_date__ = datetime.datetime.now().isoformat(timespec='minutes', sep=" ") 
     
-"""
-Command line build tool:
-
-python build.py [operation] [options]
-
-Operations:
-
-clean
-build
-release
-serve [--port port] [--nobrowser]
-
-"""
-
-
 
 def clean() -> None:
     """
     Clear out the "build" directory and remove any 'intermediate' build files
-    :param remove_cli_tools: bool If True, remove the ink_tools directory as well.
+    
     :return:
+    :rtype: None
     """
     try:
         shutil.rmtree("build")
@@ -62,10 +49,14 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     """
     Rebuild the "build" directory from scratch.
     
-    :param post: bool If True, post to Discord.
-    :param channel: str The Discord channel to use for posting.
-    :param auth: str The Discord authentication token to use for posting.
+    :param post: If True, post to Discord.
+    :type post: bool
+    :param channel: The Discord channel to use for posting.
+    :type channel: str
+    :param auth: The Discord authentication token to use for posting.
+    :type auth: str
     :return:
+    :rtype: None
     """
     # Complete rebuild
     clean()
@@ -91,7 +82,7 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
     group_list = []
     group = None
     title = None
-    range = None
+    range: Optional[list] = None
     out_text = ""
     for line in wheel_scad.split("\n"):
         out_line = line.strip()
@@ -116,7 +107,7 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
                 value = value[:idx].strip()
             else:
                 range = None
-            child = dict(key=key, title=title, value=value)
+            child: dict = dict(key=key, title=title, value=value)
             if range:
                 child["range"] = range
             group["children"].append(child)
@@ -157,6 +148,15 @@ def build(post: bool = False, channel: str = "", auth: str = "") -> None:
 def build_preset(name: str, params: dict, groups: list) -> dict:
     """
     Build a preset dictionary from the given name and parameters.
+    
+    :param name: The name of the preset.
+    :type name: str
+    :param params: The parameters for the preset.
+    :type params: dict
+    :param groups: The list of groups to use as a template.
+    :type groups: list
+    :return: A dictionary representing the preset.
+    :rtype: dict
     """
     d = copy.deepcopy(groups)
     # walk 'd' and replace any keys that match 'params'
@@ -172,7 +172,8 @@ def release() -> None:
     """
     Generate a zip file of the contents of the "build" directory.
 
-    :return:
+    :return: 
+    :rtype: None
     """
     build()
     filename = f"wheels_v{__version__.replace('.', '_')}.zip"
@@ -187,9 +188,10 @@ def release() -> None:
 def open_url(url: str) -> None:
     """open a URL in a new tab using webbrowser
 
-    Args:
-        url (str): the URL to open
-    :return:
+    :param url: The URL to open
+    :type url: str
+    :return: 
+    :rtype: None
     """
     webbrowser.open_new_tab(url)
 
@@ -199,9 +201,12 @@ def serve(port: int = 9000, nobrowser: bool = False) -> None:
 
     This will serve the contents of the "build" directory on the specified port.
 
-    :param port: int  The port to run the HTML server on. Defaults to 9000.
-    :param nobrowser: bool If true, do not attempt to open a web browser tab to the session. Defaults to False.
-    :return:
+    :param port: The port to run the HTML server on. Defaults to 9000.
+    :type port: int
+    :param nobrowser: If true, do not attempt to open a web browser tab to the session. Defaults to False.
+    :type nobrowser: bool
+    :return: 
+    :rtype: None
     """
     orig_cwd = os.getcwd()
     try:
@@ -226,7 +231,11 @@ def serve(port: int = 9000, nobrowser: bool = False) -> None:
 def gh_pages(commit_str: str = "Update pages") -> None:
     """
     Deploy the current build directory to GitHub Pages.
-    :return: None
+    
+    :param commit_str: Commit message for the deployment.
+    :type commit_str: str
+    :return: 
+    :rtype: None
     """
     # Check if we are in a git repository
     if not os.path.exists(".git"):
