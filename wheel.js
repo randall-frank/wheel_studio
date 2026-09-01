@@ -202,7 +202,7 @@ dh = 0.01;
 
 union() {
 // Generate the blade with a 1 step over/under shoot
-// This is then clipped against the hub and shround
+// This is then clipped against the hub and shroud
 // cylinders.
 for(step=[0: 1: steps]) {
 t0 = 0 + (step*t_delta);
@@ -452,7 +452,14 @@ chan_rings();
 }
 }
 
+module measuring_stub() {
+union() {
+translate([0,0,50-2]) cube([20,20,4], center=true);
+translate([0,0,25]) cylinder(d=10, h=50, center=true, $fn=200);
+}
+}
 
 wheel();
+//measuring_stub();
 
 `;

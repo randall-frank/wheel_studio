@@ -74,7 +74,7 @@ function renderPresetSelector() {
                 submenubtn.classList.add('dropdown-item');
                 submenubtn.classList.add('dropdown-toggle');
                 submenubtn.href = '#';
-                submenubtn.textContent = preset.name;
+                submenubtn.textContent = preset.name + " ";
                 submenubtn.id = submenuid;
                 submenudiv.appendChild(submenubtn); 
                 submenu = document.createElement('div');

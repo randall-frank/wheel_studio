@@ -223,7 +223,7 @@ var scad_params = [
         "params": []
     },
     {
-        "name": "Rlaarlo xts f10 2.2",
+        "name": "Rlaarlo XTS-F10 2.2",
         "params": [
             {
                 "name": "General",
@@ -438,7 +438,7 @@ var scad_params = [
         ]
     },
     {
-        "name": "Rlaarlo xts f10 1.9 (Red Spyder + 6mm offset)",
+        "name": "Rlaarlo XTS-F10 1.9 (Red Spider + 6mm offset)",
         "params": [
             {
                 "name": "General",
@@ -653,7 +653,7 @@ var scad_params = [
         ]
     },
     {
-        "name": "Team Associated",
+        "name": "Team Associated/Team Losi Racing",
         "params": []
     },
     {
@@ -1033,6 +1033,436 @@ var scad_params = [
                         "key": "spoke_hub_width",
                         "title": "Hub root width (mm)",
                         "value": "8.0"
+                    },
+                    {
+                        "key": "spoke_hub_offset",
+                        "title": "Hub root offset (mm)",
+                        "value": "0.0"
+                    },
+                    {
+                        "key": "spoke_twist_hub",
+                        "title": "Hub spoke twist (degrees)",
+                        "value": "0.0"
+                    },
+                    {
+                        "key": "spoke_smooth_radius",
+                        "title": "Spoke smoothing radius (mm)",
+                        "value": "1.0"
+                    },
+                    {
+                        "key": "spoke_steps",
+                        "title": "# of subdivisions in a spoke",
+                        "value": "2",
+                        "range": [
+                            "1",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_count",
+                        "title": "# of circular holes",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_dia",
+                        "title": "Spoke hole diameter (mm)",
+                        "value": "5.0"
+                    }
+                ]
+            },
+            {
+                "name": "Advanced",
+                "children": [
+                    {
+                        "key": "eps",
+                        "title": "Epsilon adjustment for printer (mm)",
+                        "value": "0.1"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Team Associated B64/Team Losi Racing 22 Rear",
+        "params": [
+            {
+                "name": "General",
+                "children": [
+                    {
+                        "key": "quality",
+                        "title": "Quality of tessellation",
+                        "value": "50",
+                        "range": [
+                            "10",
+                            "500"
+                        ]
+                    },
+                    {
+                        "key": "wheel_pin_hole_dia",
+                        "title": "Wheel pin hole diameter (mm)",
+                        "value": "4.2"
+                    },
+                    {
+                        "key": "air_hole_dia",
+                        "title": "Air hole diameter (mm)",
+                        "value": "2.0"
+                    },
+                    {
+                        "key": "air_hole_shroud_offset",
+                        "title": "Air hole shroud offset",
+                        "value": "0.5"
+                    }
+                ]
+            },
+            {
+                "name": "Shroud",
+                "children": [
+                    {
+                        "key": "shroud_dia",
+                        "title": "Shroud diameter (mm)",
+                        "value": "53.9"
+                    },
+                    {
+                        "key": "shroud_thickness",
+                        "title": "Shroud thickness (mm)",
+                        "value": "1"
+                    },
+                    {
+                        "key": "shroud_width",
+                        "title": "Shroud width (mm)",
+                        "value": "38.20"
+                    },
+                    {
+                        "key": "shroud_bevel",
+                        "title": "Bevel inner rim",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "1"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Tire channels",
+                "children": [
+                    {
+                        "key": "chan_width",
+                        "title": "Channel width (mm)",
+                        "value": "5.5"
+                    },
+                    {
+                        "key": "chan_thickness",
+                        "title": "Channel thickness (mm)",
+                        "value": "1.2"
+                    },
+                    {
+                        "key": "chan_outer_height",
+                        "title": "Outer channel height (mm)",
+                        "value": "2.3"
+                    },
+                    {
+                        "key": "chan_inner_height",
+                        "title": "Inner channel height (mm)",
+                        "value": "1.5"
+                    }
+                ]
+            },
+            {
+                "name": "Hub",
+                "children": [
+                    {
+                        "key": "hex_size",
+                        "title": "Hex size, across flats (mm)",
+                        "value": "12.3"
+                    },
+                    {
+                        "key": "hex_depth",
+                        "title": "Hex inset depth (mm)",
+                        "value": "4"
+                    },
+                    {
+                        "key": "hub_dia",
+                        "title": "Hub cylinder diameter (mm)",
+                        "value": "17.7"
+                    },
+                    {
+                        "key": "hub_pininset_dia",
+                        "title": "Hub pin inset diameter (mm)",
+                        "value": "14.1"
+                    },
+                    {
+                        "key": "hub_pin_depth",
+                        "title": "Hub pin depth (mm)",
+                        "value": "5"
+                    },
+                    {
+                        "key": "hub_cyl_depth",
+                        "title": "Hub cylinder depth (mm)",
+                        "value": "13.8"
+                    },
+                    {
+                        "key": "hub_face_offset",
+                        "title": "Hub offset from inner face (mm)",
+                        "value": "23.2"
+                    }
+                ]
+            },
+            {
+                "name": "Spokes",
+                "children": [
+                    {
+                        "key": "spoke_count",
+                        "title": "Spoke count",
+                        "value": "1",
+                        "range": [
+                            "1",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_duty",
+                        "title": "Spoke duty (solid spoke fraction)",
+                        "value": "0.4"
+                    },
+                    {
+                        "key": "spoke_shroud_offset",
+                        "title": "Shroud root offset (mm)",
+                        "value": "2.0"
+                    },
+                    {
+                        "key": "spoke_shroud_width",
+                        "title": "Shroud root width (mm)",
+                        "value": "8"
+                    },
+                    {
+                        "key": "spoke_twist_shroud",
+                        "title": "Shroud spoke twist (degrees)",
+                        "value": "0.0"
+                    },
+                    {
+                        "key": "spoke_hub_width",
+                        "title": "Hub root width (mm)",
+                        "value": "6"
+                    },
+                    {
+                        "key": "spoke_hub_offset",
+                        "title": "Hub root offset (mm)",
+                        "value": "0.0"
+                    },
+                    {
+                        "key": "spoke_twist_hub",
+                        "title": "Hub spoke twist (degrees)",
+                        "value": "0.0"
+                    },
+                    {
+                        "key": "spoke_smooth_radius",
+                        "title": "Spoke smoothing radius (mm)",
+                        "value": "1.0"
+                    },
+                    {
+                        "key": "spoke_steps",
+                        "title": "# of subdivisions in a spoke",
+                        "value": "2",
+                        "range": [
+                            "1",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_count",
+                        "title": "# of circular holes",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_hole_dia",
+                        "title": "Spoke hole diameter (mm)",
+                        "value": "5.0"
+                    }
+                ]
+            },
+            {
+                "name": "Advanced",
+                "children": [
+                    {
+                        "key": "eps",
+                        "title": "Epsilon adjustment for printer (mm)",
+                        "value": "0.1"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Team Associated B64/Team Losi Racing 22 Front",
+        "params": [
+            {
+                "name": "General",
+                "children": [
+                    {
+                        "key": "quality",
+                        "title": "Quality of tessellation",
+                        "value": "50",
+                        "range": [
+                            "10",
+                            "500"
+                        ]
+                    },
+                    {
+                        "key": "wheel_pin_hole_dia",
+                        "title": "Wheel pin hole diameter (mm)",
+                        "value": "4.2"
+                    },
+                    {
+                        "key": "air_hole_dia",
+                        "title": "Air hole diameter (mm)",
+                        "value": "2.0"
+                    },
+                    {
+                        "key": "air_hole_shroud_offset",
+                        "title": "Air hole shroud offset",
+                        "value": "0.5"
+                    }
+                ]
+            },
+            {
+                "name": "Shroud",
+                "children": [
+                    {
+                        "key": "shroud_dia",
+                        "title": "Shroud diameter (mm)",
+                        "value": "53.9"
+                    },
+                    {
+                        "key": "shroud_thickness",
+                        "title": "Shroud thickness (mm)",
+                        "value": "1"
+                    },
+                    {
+                        "key": "shroud_width",
+                        "title": "Shroud width (mm)",
+                        "value": "25.6"
+                    },
+                    {
+                        "key": "shroud_bevel",
+                        "title": "Bevel inner rim",
+                        "value": "0",
+                        "range": [
+                            "0",
+                            "1"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Tire channels",
+                "children": [
+                    {
+                        "key": "chan_width",
+                        "title": "Channel width (mm)",
+                        "value": "5.5"
+                    },
+                    {
+                        "key": "chan_thickness",
+                        "title": "Channel thickness (mm)",
+                        "value": "1.2"
+                    },
+                    {
+                        "key": "chan_outer_height",
+                        "title": "Outer channel height (mm)",
+                        "value": "2.3"
+                    },
+                    {
+                        "key": "chan_inner_height",
+                        "title": "Inner channel height (mm)",
+                        "value": "1.5"
+                    }
+                ]
+            },
+            {
+                "name": "Hub",
+                "children": [
+                    {
+                        "key": "hex_size",
+                        "title": "Hex size, across flats (mm)",
+                        "value": "12.3"
+                    },
+                    {
+                        "key": "hex_depth",
+                        "title": "Hex inset depth (mm)",
+                        "value": "4"
+                    },
+                    {
+                        "key": "hub_dia",
+                        "title": "Hub cylinder diameter (mm)",
+                        "value": "17.7"
+                    },
+                    {
+                        "key": "hub_pininset_dia",
+                        "title": "Hub pin inset diameter (mm)",
+                        "value": "14.1"
+                    },
+                    {
+                        "key": "hub_pin_depth",
+                        "title": "Hub pin depth (mm)",
+                        "value": "0"
+                    },
+                    {
+                        "key": "hub_cyl_depth",
+                        "title": "Hub cylinder depth (mm)",
+                        "value": "5.4"
+                    },
+                    {
+                        "key": "hub_face_offset",
+                        "title": "Hub offset from inner face (mm)",
+                        "value": "19.6"
+                    }
+                ]
+            },
+            {
+                "name": "Spokes",
+                "children": [
+                    {
+                        "key": "spoke_count",
+                        "title": "Spoke count",
+                        "value": "1",
+                        "range": [
+                            "1",
+                            "20"
+                        ]
+                    },
+                    {
+                        "key": "spoke_duty",
+                        "title": "Spoke duty (solid spoke fraction)",
+                        "value": "0.4"
+                    },
+                    {
+                        "key": "spoke_shroud_offset",
+                        "title": "Shroud root offset (mm)",
+                        "value": "2.0"
+                    },
+                    {
+                        "key": "spoke_shroud_width",
+                        "title": "Shroud root width (mm)",
+                        "value": "5"
+                    },
+                    {
+                        "key": "spoke_twist_shroud",
+                        "title": "Shroud spoke twist (degrees)",
+                        "value": "0.0"
+                    },
+                    {
+                        "key": "spoke_hub_width",
+                        "title": "Hub root width (mm)",
+                        "value": "5"
                     },
                     {
                         "key": "spoke_hub_offset",
