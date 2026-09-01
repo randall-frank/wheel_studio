@@ -1,0 +1,40 @@
+{
+    "fileFormatVersion": "1",
+    "section_name": "Axial",
+    "parameterSets": {
+        "Axial SCX-10 1.9": {
+            "quality": "50",
+            "wheel_pin_hole_dia": "4.2",
+            "air_hole_dia": "2.0",
+            "air_hole_shroud_offset": "0.4",
+            "shroud_dia": "45",
+            "shroud_thickness": "1.75",
+            "shroud_width": "26.5",
+            "shroud_bevel": "0",
+            "chan_width": "4.0",
+            "chan_thickness": "1.7",
+            "chan_outer_height": "2.0",
+            "chan_inner_height": "1",
+            "hex_size": "12.3",
+            "hex_depth": "4",
+            "hub_dia": "18.0",
+            "hub_pininset_dia": "14.0",
+            "hub_pin_depth": "4",
+            "hub_cyl_depth": "12.6",
+            "hub_face_offset": "5.4",
+            "spoke_count": "1",
+            "spoke_duty": "0.4",
+            "spoke_shroud_offset": "5",
+            "spoke_shroud_width": "8.0",
+            "spoke_twist_shroud": "0.0",
+            "spoke_hub_width": "5",
+            "spoke_hub_offset": "0.0",
+            "spoke_twist_hub": "0.0",
+            "spoke_smooth_radius": "1.0",
+            "spoke_steps": "2",
+            "spoke_hole_count": "5",
+            "spoke_hole_dia": "5.0",
+            "eps": "0.1"
+        }
+    }
+}
